@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Security Entrepreneurs Association') }}</title>
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -16,25 +16,16 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
-            <!-- Navigation Bar -->
             @include('layouts.navigation')
 
-            <!-- Header Section -->
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-                    <!-- Logo -->
-                    <div class="flex items-center">
-                        <img src="{{ asset('img/association.jpg') }}" alt="Association Logo" class="w-20 h-auto">
+            <!-- Page Heading -->
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
                     </div>
-
-                    <!-- Header Content (Optional) -->
-                    @isset($header)
-                        <div class="flex items-center">
-                            {{ $header }}
-                        </div>
-                    @endisset
-                </div>
-            </header>
+                </header>
+            @endisset
 
             <!-- Page Content -->
             <main>

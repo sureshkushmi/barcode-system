@@ -31,10 +31,10 @@ class AuthenticatedSessionController extends Controller
         $role = auth()->user()->role;
 
         // Redirect based on the user's role
-        if ($role === 'superadmin') {
-            return redirect()->route('superadmin.pending-members'); // Redirect to superadmin dashboard or pending members page
-        } elseif ($role === 'member') {
-            return redirect()->route('members.dashboard'); // Redirect to member dashboard
+        if ($role === 'admin') {
+            return redirect()->route('superadmin.pending-users'); // Redirect to superadmin dashboard or pending members page
+        } elseif ($role === 'users') {
+            return redirect()->route('users.dashboard'); // Redirect to member dashboard
         } else {
             return redirect()->intended(route('dashboard')); // Fallback to the intended route or default dashboard
         }

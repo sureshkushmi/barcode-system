@@ -15,25 +15,6 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                      <!--Members Link -->
-                      <x-nav-link :href="route('members.members')" :active="request()->routeIs('members.members')">
-                            {{ __('Members') }}
-                        </x-nav-link>
-                    
-
-                    <x-nav-link :href="route('blacklisted.index')" :active="request()->routeIs('blacklisted.index')">
-                            {{ __('Black Listed') }}
-                        </x-nav-link>
-
-                        <x-nav-link :href="route('blacklisted.create')" :active="request()->routeIs('blacklisted.index')">
-                            {{ __('Add Black Listed') }}
-                        </x-nav-link>
-
-                        @if(auth()->user()->role === 'superadmin')
-                            <x-nav-link :href="route('superadmin.pending-members')" :active="request()->routeIs('superadmin.pending-members')">
-                                {{ __('Pending Members') }}
-                            </x-nav-link>
-                        @endif
                 </div>
             </div>
 
