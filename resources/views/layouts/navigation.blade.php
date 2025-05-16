@@ -15,9 +15,13 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <!-- navigation for Configure ShippingEasy -->
+                    <x-nav-link :href="route('superadmin.shipping.edit')" :active="request()->routeIs('superadmin.shipping.edit')">
+                        {{ __('Configure ShippingEasy') }}
+                    </x-nav-link>
                 </div>
             </div>
-
+            
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">

@@ -2,20 +2,34 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-use App\Models\Member;
 use Illuminate\Http\Request;
 
-class MemberController extends Controller
+class UserController extends Controller
 {
     
     public function dashboard()
     {
         // Get user information (example)
         $user = auth()->user();
-        $membershipExpiry = $user->expiry_date; // Adjust based on your DB structure
-
-        return view('members.dashboard', compact('user', 'membershipExpiry'));
+        return view('users.dashboard', compact('user'));
     }
+
+       // Entry point to the barcode scanner
+       public function scanner()
+       {
+           return view('user.scanner');
+       }
+   
+       // Show user's scan history / reports
+       public function reports()
+       {
+           $user = Auth::user();
+   
+           // Example: assuming you have a Scan model related to the user
+           $scans = $user->scans()->latest()->paginate(10);
+   
+           return view('user.reports', compact('scans'));
+       }
     /**
      * Display a listing of the resource.
      */
