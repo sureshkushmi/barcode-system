@@ -13,13 +13,16 @@
                 <div class="mt-4 space-y-4">
                     <p><strong>Email:</strong> {{ $user->email }}</p>
 
-                        <!-- Barcode Scanner Actions -->
+                    <!-- Barcode Scanner Actions -->
                     <div class="mt-6">
-                        <a href="{{ route('scanner.start') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            📦 Start Scanning Shipping Label
-                        </a>
+                    <a href="{{ route('scan.label') }}"
+   class="inline-block bg-blue-500 text-black font-bold py-2 px-4 rounded hover:bg-blue-700">
+    📦 Start Scanning Shipping Label
+</a>
 
-                        <a href="{{ route('user.reports') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4">
+
+                        <a href="{{ route('user.reports') }}"
+                           class="inline-block bg-green-500 text-black font-bold py-2 px-4 rounded hover:bg-green-700 ml-4">
                             📊 View My Reports
                         </a>
                     </div>

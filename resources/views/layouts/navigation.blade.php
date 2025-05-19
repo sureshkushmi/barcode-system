@@ -18,23 +18,24 @@
 
                     @if(Auth::user()->role == 'admin')
                         <!-- Admin Menu Items -->
-                        <x-nav-link :href="route('superadmin.shipping.edit')" :active="request()->routeIs('superadmin.shipping.edit')">
+                                                <x-nav-link :href="route('superadmin.settings.edit')" :active="request()->routeIs('superadmin.settings.edit')">
                             {{ __('Configure ShippingEasy') }}
                         </x-nav-link>
+
                         <x-nav-link :href="route('superadmin.users')" :active="request()->routeIs('superadmin.users')">
                             {{ __('Manage Users') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('superadmin.reports')" :active="request()->routeIs('superadmin.reports')">
+                        <x-nav-link :href="route('user.reports')" :active="request()->routeIs('user.reports')">
                             {{ __('Reports') }}
                         </x-nav-link>
                     @endif
 
-                    @if(Auth::user()->role == 'user')
+                    @if(Auth::user()->role == 'users')
                         <!-- User Menu Items -->
                         <x-nav-link :href="route('user.reports')" :active="request()->routeIs('user.reports')">
                             {{ __('My Reports') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('scan.label.form')" :active="request()->routeIs('scan.label.form')">
+                        <x-nav-link :href="route('scan.label.form')" :active="request()->routeIs('scan.label')">
                             {{ __('Scan Shipping Label') }}
                         </x-nav-link>
                     @endif
@@ -106,7 +107,7 @@
             </x-responsive-nav-link>
 
             @if(Auth::user()->role == 'admin')
-                <x-responsive-nav-link :href="route('superadmin.shipping.edit')" :active="request()->routeIs('superadmin.shipping.edit')">
+                <x-responsive-nav-link :href="route('superadmin.settings.edit')" :active="request()->routeIs('superadmin.settings.edit')">
                     {{ __('Configure ShippingEasy') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('superadmin.users')" :active="request()->routeIs('superadmin.users')">
@@ -117,11 +118,11 @@
                 </x-responsive-nav-link>
             @endif
 
-            @if(Auth::user()->role == 'user')
+            @if(Auth::user()->role == 'users')
                 <x-responsive-nav-link :href="route('user.reports')" :active="request()->routeIs('user.reports')">
                     {{ __('My Reports') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('scan.label.form')" :active="request()->routeIs('scan.label.form')">
+                <x-responsive-nav-link :href="route('scan.label')" :active="request()->routeIs('scan.label')">
                     {{ __('Scan Shipping Label') }}
                 </x-responsive-nav-link>
             @endif

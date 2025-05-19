@@ -5,7 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\ScanController;
-use App\Http\Controllers\Admin\ShippingSettingController;
+//use App\Http\Controllers\Admin\ShippingSettingController;
 use App\Http\Controllers\ShippingController;
 
 // Public route
@@ -31,13 +31,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/scan/items/{shipmentId}', [ScanController::class, 'scanItems'])->name('scan.items');
     Route::post('/scan/item/{itemId}', [ScanController::class, 'updateItem'])->name('scan.item.update');
     Route::get('/scan/next', [ScanController::class, 'nextLabel'])->name('scan.next');
+    Route::get('/reports', [UserController::class, 'userReports'])->name('user.reports');
 });
 
 // User Role Routes
 Route::middleware(['auth', 'role:users'])->group(function () {
     Route::get('/users/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
-    Route::get('/scanner', [UserController::class, 'scanner'])->name('scanner.start');
-    Route::get('/reports', [UserController::class, 'reports'])->name('user.reports');
+    //Route::get('/scanner', [UserController::class, 'scanner'])->name('scanner.start');
+   // Route::get('/reports', [UserController::class, 'reports'])->name('user.reports');
 });
 
 // Admin Role Routes
@@ -55,8 +56,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('superadmin')->name('superadmi
     Route::post('/shipping/save', [ShippingController::class, 'save'])->name('shipping.save');
 
     // Optional alternative admin shipping settings controller
-    Route::get('/shipping-settings', [ShippingSettingController::class, 'edit'])->name('settings.edit');
-    Route::post('/shipping-settings', [ShippingSettingController::class, 'update'])->name('settings.update');
+    Route::get('/shipping-settings', [ShippingController::class, 'edit'])->name('settings.edit');
+    Route::post('/shipping-settings', [ShippingController::class, 'update'])->name('settings.update');
+    Route::get('/shipments', [ShippingController::class, 'indexShipments'])->name('shipments');
+    Route::get('/shipments', [ShippingController::class, 'shipping'])->name('shipments');
  Route::get('/reports', [ReportController::class, 'index'])->name('reports');
 });
 

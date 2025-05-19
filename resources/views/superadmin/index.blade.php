@@ -1,61 +1,48 @@
+@extends('layouts.admin') {{-- This extends your admin.blade.php --}}
 
+@section('title', 'User Management')
 
-<x-app-layout>
-<x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Users Dashboard') }}
-        </h2>
-    </x-slot>
+@section('content')
+  <div class="container-fluid py-4">
+    <div class="card">
+      <div class="card-header d-flex justify-between items-center">
+        <h3 class="card-title font-weight-bold">User List</h3>
+        <a href="{{ route('superadmin.users.create') }}" class="btn btn-success">
+          <i class="bi bi-plus-lg"></i> Add User
+        </a>
+      </div>
 
-    <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow-sm rounded-lg p-6">
-
-            @if(session('success'))
-                <p class="text-green-600">{{ session('success') }}</p>
-            @endif
-
-            <!-- ✅ Add User Button -->
-            <div class="mb-4">
-                <a href="{{ route('superadmin.users.create') }}" class="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-                    Add User
-                </a>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="table-auto w-full mt-4 border-collapse border border-gray-200">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border px-4 py-2 text-left">Name</th>
-                            <th class="border px-4 py-2 text-left">Email</th>
-                            <th class="border px-4 py-2 text-left">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($users as $user)
-                            <tr class="border-b">
-                                <td class="border px-4 py-2">{{ $user->name }}</td>
-                                <td class="border px-4 py-2">{{ $user->email }}</td>
-                                <td class="border px-4 py-2 space-x-2">
-                                    <!-- Edit -->
-                                    <a href="{{ route('superadmin.users.edit', $user->id) }}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Edit</a>
-
-                                    <!-- Delete -->
-                                    <form action="{{ route('superadmin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Are you sure?')" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
+      <div class="card-body">
+        <table class="table table-striped table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th style="width: 200px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($users as $user)
+              <tr>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>
+                  <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-pencil-square"></i> Edit
+                  </a>
+                  <form action="{{ route('superadmin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
     </div>
-</div>
-</x-app-layout>
-
-
+  </div>
+@endsection

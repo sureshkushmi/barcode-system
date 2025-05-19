@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\Scan; // ✅ Add this line
+use App\Models\Shipment;
+use App\Models\Item;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -21,15 +24,19 @@ class UserController extends Controller
        }
    
        // Show user's scan history / reports
-       public function reports()
-       {
-           $user = Auth::user();
-   
-           // Example: assuming you have a Scan model related to the user
-           $scans = $user->scans()->latest()->paginate(10);
-   
-           return view('user.reports', compact('scans'));
-       }
+            public function userReports()
+        {
+            $user = auth()->user();
+
+            // Load scans with shipment and item info
+            $scans = Scan::with(['shipment', 'item'])
+                ->where('user_id', $user->id)
+                ->orderBy('scanned_at', 'desc')
+                ->paginate(15);
+
+            return view('users.reports', compact('scans'));
+        }
+
     /**
      * Display a listing of the resource.
      */
