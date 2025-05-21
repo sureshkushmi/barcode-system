@@ -1,19 +1,39 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2>Scan Shipping Label</h2>
-    </x-slot>
+@extends('layouts.admin')
 
-    <div class="p-6 max-w-md mx-auto">
-        @if(session('success'))
-            <div class="text-green-600 mb-4">{{ session('success') }}</div>
-        @endif
+@section('title', 'Scan Shipping Label')
 
-        <form method="POST" action="{{ route('scan.label') }}">
-            @csrf
-            <label for="tracking_number">Tracking Number</label>
-            <input type="text" name="tracking_number" class="w-full border p-2 mb-4" required>
+@section('content')
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
 
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Fetch Items</button>
-        </form>
+        <div class="card card-primary shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title">Scan Shipping Label</h3>
+          </div>
+
+          <div class="card-body">
+            @if(session('success'))
+              <div class="alert alert-success">
+                {{ session('success') }}
+              </div>
+            @endif
+
+            <form method="POST"  action="{{ route('scan.label') }}">
+              @csrf
+              
+              <div class="form-group mb-3">
+                <label for="tracking_number">Tracking Number</label>
+                <input type="text" name="tracking_number" id="tracking_number" class="form-control" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Fetch Items</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
     </div>
-</x-app-layout>
+  </div>
+
+@endsection

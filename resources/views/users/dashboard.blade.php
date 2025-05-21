@@ -1,33 +1,35 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('User Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm rounded-lg p-6">
-                <h3 class="text-xl font-semibold">{{ __('Welcome, ') }}{{ $user->name }}</h3>
+@section('title', 'User Dashboard')
 
-                <div class="mt-4 space-y-4">
-                    <p><strong>Email:</strong> {{ $user->email }}</p>
+@section('content')
 
-                    <!-- Barcode Scanner Actions -->
-                    <div class="mt-6">
-                    <a href="{{ route('scan.label') }}"
-   class="inline-block bg-blue-500 text-black font-bold py-2 px-4 rounded hover:bg-blue-700">
-    📦 Start Scanning Shipping Label
-</a>
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
 
+        <div class="card card-primary shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title">Welcome, {{ $user->name }}</h3>
+          </div>
 
-                        <a href="{{ route('user.reports') }}"
-                           class="inline-block bg-green-500 text-black font-bold py-2 px-4 rounded hover:bg-green-700 ml-4">
-                            📊 View My Reports
-                        </a>
-                    </div>
-                </div>
+          <div class="card-body">
+            <p><strong>Email:</strong> {{ $user->email }}</p>
+
+            <div class="mt-4">
+              <a href="{{ route('scan.label') }}" class="btn btn-primary">
+                📦 Start Scanning Shipping Label
+              </a>
+
+              <a href="{{ route('user.reports') }}" class="btn btn-success ml-3">
+                📊 View My Reports
+              </a>
             </div>
+          </div>
         </div>
+
+      </div>
     </div>
-</x-app-layout>
+  </div>
+
+@endsection

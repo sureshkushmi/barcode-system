@@ -1,62 +1,80 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Configure ShippingEasy') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            @if(session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
+@section('title', 'Configure ShippingEasy')
 
-            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <form method="POST" action="{{ route('superadmin.settings.update') }}">
-                    @csrf
+@section('content')
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">
-                            API Key
-                        </label>
-                        <input type="text" name="api_key" value="{{ old('api_key', $settings->api_key ?? '') }}"
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">
-                            API Secret
-                        </label>
-                        <input type="text" name="api_secret" value="{{ old('api_secret', $settings->api_secret ?? '') }}"
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
+        @if(session('success'))
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        @endif
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">
-                            Store API Key
-                        </label>
-                        <input type="text" name="store_api_key" value="{{ old('store_api_key', $settings->store_api_key ?? '') }}"
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Settings</h3>
+          </div>
 
-                    <div class="mb-6">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">
-                            API URL
-                        </label>
-                        <input type="text" name="api_url" value="{{ old('api_url', $settings->api_url ?? '') }}"
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
+          <form method="POST" action="{{ route('superadmin.settings.update') }}">
+            @csrf
+            <div class="card-body">
 
-                    <div class="flex items-center justify-end">
-                        <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                            Save Settings
-                        </button>
-                    </div>
-                </form>
+              <div class="form-group mb-3">
+                <label for="api_key">API Key</label>
+                <input type="text" name="api_key" id="api_key" value="{{ old('api_key', $settings->api_key ?? '') }}"
+                  class="form-control @error('api_key') is-invalid @enderror" placeholder="Enter API Key">
+                @error('api_key')
+                  <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="api_secret">API Secret</label>
+                <input type="text" name="api_secret" id="api_secret" value="{{ old('api_secret', $settings->api_secret ?? '') }}"
+                  class="form-control @error('api_secret') is-invalid @enderror" placeholder="Enter API Secret">
+                @error('api_secret')
+                  <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="store_api_key">Store API Key</label>
+                <input type="text" name="store_api_key" id="store_api_key" value="{{ old('store_api_key', $settings->store_api_key ?? '') }}"
+                  class="form-control @error('store_api_key') is-invalid @enderror" placeholder="Enter Store API Key">
+                @error('store_api_key')
+                  <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="api_url">API URL</label>
+                <input type="text" name="api_url" id="api_url" value="{{ old('api_url', $settings->api_url ?? '') }}"
+                  class="form-control @error('api_url') is-invalid @enderror" placeholder="Enter API URL">
+                @error('api_url')
+                  <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+              </div>
+
             </div>
+
+            <div class="card-footer text-right">
+              <button type="submit" class="btn btn-primary">
+                Save Settings
+              </button>
+            </div>
+          </form>
+
         </div>
+      </div>
     </div>
-</x-app-layout>
+  </div>
+
+
+@endsection

@@ -14,7 +14,7 @@
 <div class="login-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="#" class="h1"><b>Admin</b>Barcode</a>
+      <a href="#" class="h1"><b>Admin</b>- Barcode</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Sign in to start your session</p>
@@ -71,19 +71,20 @@
         </p>
       @endif
 
-      @if (Route::has('register'))
+      {{-- @if (Route::has('register'))
         <p class="mb-0">
           <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
-        </p>
-      @endif
+        </p> 
+      @endif --}}
 
     </div>
   </div>
 </div>
 
 <!-- Scripts -->
-<script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 </body>
 </html>

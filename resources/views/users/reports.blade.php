@@ -1,38 +1,48 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2>User Scanning Reports</h2>
-    </x-slot>
+@extends('layouts.admin')
 
-    <div class="p-6 bg-white rounded shadow">
-        <table class="table-auto w-full border border-gray-300">
-            <thead>
-                <tr>
-                    <th class="border px-4 py-2">Shipment Tracking #</th>
-                    <th class="border px-4 py-2">Item Name</th>
-                    <th class="border px-4 py-2">Quantity Scanned</th>
-                    <th class="border px-4 py-2">Scanned At</th>
-                    <th class="border px-4 py-2">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($scans as $scan)
-                    <tr>
-                        <td class="border px-4 py-2">{{ $scan->shipment->tracking_number ?? 'N/A' }}</td>
-                        <td class="border px-4 py-2">{{ $scan->item->name ?? 'Label Scan' }}</td>
-                        <td class="border px-4 py-2">{{ $scan->quantity_scanned }}</td>
-                        <td class="border px-4 py-2">{{ $scan->scanned_at->format('Y-m-d H:i') }}</td>
-                        <td class="border px-4 py-2">{{ ucfirst($scan->status) }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="text-center p-4">No scans found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
+@section('title', 'User Scanning Reports')
+
+@section('content')
+<div class="container-fluid py-4">
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">User Scanning Reports</h3>
+      </div>
+
+      <div class="card-body table-responsive p-0">
+        <table class="table table-bordered table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Shipment Tracking #</th>
+              <th>Item Name</th>
+              <th>Quantity Scanned</th>
+              <th>Scanned At</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @forelse($scans as $scan)
+              <tr>
+                <td>{{ $scan->shipment->tracking_number ?? 'N/A' }}</td>
+                <td>{{ $scan->item->name ?? 'Label Scan' }}</td>
+                <td>{{ $scan->quantity_scanned }}</td>
+                <td>{{ $scan->scanned_at->format('Y-m-d H:i') }}</td>
+                <td>{{ ucfirst($scan->status) }}</td>
+              </tr>
+            @empty
+              <tr>
+                <td colspan="5" class="text-center">No scans found.</td>
+              </tr>
+            @endforelse
+          </tbody>
         </table>
+      </div>
 
-        <div class="mt-4">
-            {{ $scans->links() }}
-        </div>
+      <div class="card-footer clearfix">
+        {{ $scans->links() }}
+      </div>
     </div>
-</x-app-layout>
+
+  </div>
+@endsection

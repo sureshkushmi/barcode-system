@@ -3,7 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\BlacklistedWorker;
+use App\Models\ShippingSetting;
+use App\Models\Shipment;
+use App\Models\Item;
+use App\Models\Scan;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,8 +23,13 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         // Create 10 random users using the UserFactory
-        //User::factory(10)->create(); // Creates 10 random users
-        BlacklistedWorker::factory(10)->create();
+        User::factory(10)->create(); // Creates 10 random users
+       // BlacklistedWorker::factory(10)->create();
+      //ShippingSetting::factory(10)->create();
+      // Shipment::factory(10)->create();
+      Item::factory(20)->create();      // Run this BEFORE Scan
+    Scan::factory(30)->create();      // Relies on item_id, user_id, shipment_id
+
     }
 }
 

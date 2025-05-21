@@ -11,7 +11,7 @@ class SuperadminController extends Controller
     public function index()
     {
         $users = User::where('status', 'active')->where('role', 'users')->get();
-        return view('superadmin.index', compact('users'));
+        return view('superadmin.dashboard', compact('users'));
     }
 
     // Show create form

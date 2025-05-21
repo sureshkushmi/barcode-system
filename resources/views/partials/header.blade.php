@@ -10,11 +10,21 @@
         </a>
       </li>
       <li class="nav-item d-none d-md-block">
-        <a href="#" class="nav-link">Home</a>
+            @php
+                $active = request()->routeIs('superadmin.users') ? 'active' : '';
+            @endphp
+
+            @if(Auth::check() && Auth::user()->role === 'admin')
+                <a href="{{ route('superadmin.users') }}" class="nav-link {{ $active }}">Dashboard</a>
+            @else
+                <a href="{{ route('users.dashboard') }}" class="nav-link {{ $active }}">Dashboard</a>
+            @endif
       </li>
+
       <li class="nav-item d-none d-md-block">
-        <a href="#" class="nav-link">Contact</a>
+          <a href="{{ route('profile.edit') }}" class="nav-link">Profile</a>
       </li>
+
     </ul>
     <!-- End navbar links -->
 
@@ -138,7 +148,7 @@
         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
         <img src="{{ asset('img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />
 
-          <span class="d-none d-md-inline">Alexander Pierce</span>
+         <!-- <span class="d-none d-md-inline">Alexander Pierce</span> -->
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
           <!-- User image -->
@@ -149,27 +159,20 @@
               <small>Member since Nov. 2023</small>
             </p>
           </li>
-          <!-- Menu Body -->
-          <li class="user-body">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-4 text-center">
-                <a href="#">Followers</a>
-              </div>
-              <div class="col-4 text-center">
-                <a href="#">Sales</a>
-              </div>
-              <div class="col-4 text-center">
-                <a href="#">Friends</a>
-              </div>
-            </div>
-            <!--end::Row-->
-          </li>
+
           <!-- Menu Footer-->
           <li class="user-footer">
-            <a href="#" class="btn btn-default btn-flat">Profile</a>
-            <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
-          </li>
+  <div class="float-left">
+    <a href="{{ route('profile.edit') }}" class="btn btn-default btn-flat">Profile</a>
+  </div>
+  <div class="float-right">
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+      @csrf
+      <button type="submit" class="btn btn-default btn-flat">Sign out</button>
+    </form>
+  </div>
+</li>
+
         </ul>
       </li>
     </ul>

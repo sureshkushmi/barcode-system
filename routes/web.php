@@ -60,7 +60,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('superadmin')->name('superadmi
     Route::post('/shipping-settings', [ShippingController::class, 'update'])->name('settings.update');
     Route::get('/shipments', [ShippingController::class, 'indexShipments'])->name('shipments');
     Route::get('/shipments', [ShippingController::class, 'shipping'])->name('shipments');
- Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
 });
 
 // Auth routes (login, register, etc.)
