@@ -28,9 +28,15 @@ Route::middleware('auth')->group(function () {
     // Barcode Scanning Flow
     Route::get('/scan', [ScanController::class, 'scanLabelForm'])->name('scan.label.form');
     Route::post('/scan', [ScanController::class, 'handleLabel'])->name('scan.label');
+    Route::get('/scanitems', [ScanController::class, 'scanItemForm'])->name('scan.item.form');
     Route::get('/scan/items/{shipmentId}', [ScanController::class, 'scanItems'])->name('scan.items');
-    Route::post('/scan/item/{itemId}', [ScanController::class, 'updateItem'])->name('scan.item.update');
-    Route::get('/scan/next', [ScanController::class, 'nextLabel'])->name('scan.next');
+
+
+
+    //Route::get('/scanitems', [ScanController::class, 'scanItemForm'])->name('scan.item.form');
+    //Route::post('/scan/items/{shipmentId}', [ScanController::class, 'scanItems'])->name('scan.items');
+    Route::POST('/scan/item/{itemId}', [ScanController::class, 'updateItem'])->name('update.item');
+    Route::get('/scan/next', [ScanController::class, 'nextShipment'])->name('next.label');
     Route::get('/reports', [UserController::class, 'userReports'])->name('user.reports');
 });
 

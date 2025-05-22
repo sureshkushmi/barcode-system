@@ -69,11 +69,17 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('scan.label')}}" class="nav-link {{ request()->routeIs('scan.label') ? 'active' : '' }}">
+                <a href="{{route('scan.label.form')}}" class="nav-link {{ request()->routeIs('scan.label.form') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Scan Shipping Label</p>
                 </a>
               </li>
+              <!--<li class="nav-item">
+                <a href="{{route('scan.item.form')}}" class="nav-link {{ request()->routeIs('scan.item.form') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Scan Shipment Items</p>
+                </a>
+              </li> -->
               @endif 
                 </ul>
               </li>

@@ -1,0 +1,5 @@
+.bg-body-secondary {
+    --bs-bg-opacity: 1 !important;
+    background-color: rgba(4, 64, 123, var(--bs-bg-opacity)) !important;
+  }
+  
