@@ -6,57 +6,56 @@
 
 <div class="container-fluid py-4">
 
-  <!-- 🔍 Filter by Date Range -->
+  <!-- 🔍 Filter by Date Range 
   <div class="row mb-4">
     <div class="col-md-4">
       <label for="user-date-range" class="form-label fw-bold">📅 Filter by Date Range</label>
       <input type="text" name="datetimes" id="user-date-range" class="form-control" placeholder="Select date range">
     </div>
-  </div>
+  </div>-->
 
   <!-- 📊 Summary Cards -->
   <div class="row mb-4">
-    <div class="col-md-3">
-      <div class="info-box bg-primary">
-        <span class="info-box-icon"><i class="fas fa-box"></i></span>
-        <div class="info-box-content">
-          <span class="info-box-text">Total Scans This Week</span>
-          <span class="info-box-number">120</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="info-box bg-success">
-        <span class="info-box-icon"><i class="fas fa-check"></i></span>
-        <div class="info-box-content">
-          <span class="info-box-text">Completed Scans</span>
-          <span class="info-box-number">100</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="info-box bg-warning">
-        <span class="info-box-icon"><i class="fas fa-sync-alt"></i></span>
-        <div class="info-box-content">
-          <span class="info-box-text">Pending Scans</span>
-          <span class="info-box-number">15</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="info-box bg-info">
-        <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
-        <div class="info-box-content">
-          <span class="info-box-text">Last Scan Date</span>
-          <span class="info-box-number">May 21, 2025</span>
-        </div>
+  <div class="col-md-3">
+    <div class="info-box bg-primary">
+      <span class="info-box-icon"><i class="fas fa-box"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Scans This Week</span>
+        <span class="info-box-number">{{ $totalScansThisWeek }}</span>
       </div>
     </div>
   </div>
 
+  <div class="col-md-3">
+    <div class="info-box bg-success">
+      <span class="info-box-icon"><i class="fas fa-check"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Completed Scans</span>
+        <span class="info-box-number">{{ $completedScans }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box bg-warning">
+      <span class="info-box-icon"><i class="fas fa-sync-alt"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Pending Scans</span>
+        <span class="info-box-number">{{ $pendingScans }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="info-box bg-info">
+      <span class="info-box-icon"><i class="fas fa-calendar-day"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Last Scan Date</span>
+        <span class="info-box-number">{{ $lastScanDate }}</span>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- 1. Chart – My Daily Scans -->
   <div class="card mb-4">
     <div class="card-header bg-primary text-white">

@@ -11,11 +11,11 @@
       </li>
       <li class="nav-item d-none d-md-block">
             @php
-                $active = request()->routeIs('superadmin.users') ? 'active' : '';
+                $active = request()->routeIs('superadmin.dashboard') ? 'active' : '';
             @endphp
 
             @if(Auth::check() && Auth::user()->role === 'admin')
-                <a href="{{ route('superadmin.users') }}" class="nav-link {{ $active }}">Dashboard</a>
+                <a href="{{ route('superadmin.dashboard') }}" class="nav-link {{ $active }}">Dashboard</a>
             @else
                 <a href="{{ route('users.dashboard') }}" class="nav-link {{ $active }}">Dashboard</a>
             @endif
@@ -30,18 +30,18 @@
 
     <ul class="navbar-nav ms-auto">
       <!-- Navbar Search -->
-      <li class="nav-item">
+      <!--<li class="nav-item">
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
           <i class="bi bi-search"></i>
         </a>
-      </li>
+      </li>-->
 
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
-        <a class="nav-link" data-bs-toggle="dropdown" href="#">
+       <!-- <a class="nav-link" data-bs-toggle="dropdown" href="#">
           <i class="bi bi-chat-text"></i>
           <span class="navbar-badge badge text-bg-danger">3</span>
-        </a>
+        </a>-->
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
@@ -152,13 +152,13 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
           <!-- User image -->
-          <li class="user-header text-bg-primary">
+        <!--  <li class="user-header text-bg-primary">
             <img src="{{ asset('img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />  
-            <p>
+             <p>
               Alexander Pierce - Web Developer
               <small>Member since Nov. 2023</small>
             </p>
-          </li>
+          </li>-->
 
           <!-- Menu Footer-->
           <li class="user-footer">

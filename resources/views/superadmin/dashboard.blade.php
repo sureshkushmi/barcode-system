@@ -18,15 +18,15 @@
         <label for="scan-filter" class="form-label fw-bold">Filter</label>
         <select id="scan-filter" class="form-select">
           <option value="day">Today</option>
-          <option value="week">This Week</option>
+          <option value="week" selected>This Week</option>
         </select>
       </div>
 
       <!-- 📅 Filter by Date Range -->
       <div class="col-md-4">
-        <label for="user-date-range" class="form-label fw-bold">📅 Filter by Date Range</label>
-        <input type="text" name="datetimes" id="user-date-range" class="form-control" placeholder="Select date range">
-      </div>
+  <label for="user-date-range" class="form-label fw-bold">📅 Filter by Date Range</label>
+  <input type="text" name="datetimes" id="user-date-range" class="form-control" placeholder="Select date range">
+</div>
     </div>
 
     <!-- Chart Area -->

@@ -5,11 +5,18 @@
           @php
           $active = request()->routeIs('dashboard') ? 'active' : '';
         @endphp
+        @if(Auth::check() && Auth::user()->role === 'admin')
+        <a href="{{ route('superadmin.dashboard') }}" class="brand-link {{ $active }}">
+                <img src="{{ asset('img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image opacity-75 shadow" />
+                <span class="brand-text fw-light">Barcode</span>
+            </a>
+            @else
+            <a href="{{ route('users.dashboard') }}" class="brand-link {{ $active }}">
+                <img src="{{ asset('img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image opacity-75 shadow" />
+                <span class="brand-text fw-light">Barcode</span>
+            </a>
+            @endif
 
-        <a href="{{ route('dashboard') }}" class="brand-link {{ $active }}">
-          <img src="{{ asset('img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image opacity-75 shadow" />
-          <span class="brand-text fw-light">Barcode</span>
-        </a>
 
           <!--end::Brand Link-->
         </div>

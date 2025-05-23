@@ -45,11 +45,15 @@ Route::middleware(['auth', 'role:users'])->group(function () {
     Route::get('/users/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
     //Route::get('/scanner', [UserController::class, 'scanner'])->name('scanner.start');
    // Route::get('/reports', [UserController::class, 'reports'])->name('user.reports');
+   // For Users Dashboard 
+   Route::get('/weekly-scans', [ScanController::class, 'totalScansThisWeekView'])->name('weekly.scans');
+
 });
 
 // Admin Role Routes
 Route::middleware(['auth', 'role:admin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     // User management
+    Route::get('/dashboard', [SuperadminController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [SuperadminController::class, 'index'])->name('users');
     Route::get('/users/create', [SuperadminController::class, 'create'])->name('users.create');
     Route::post('/users', [SuperadminController::class, 'store'])->name('users.store');
@@ -66,7 +70,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('superadmin')->name('superadmi
     Route::post('/shipping-settings', [ShippingController::class, 'update'])->name('settings.update');
     Route::get('/shipments', [ShippingController::class, 'indexShipments'])->name('shipments');
     Route::get('/shipments', [ShippingController::class, 'shipping'])->name('shipments');
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+    Route::get('/reports', [UserController::class, 'userReports'])->name('reports');
+
+
+    // scanning stats chart 
+   // Route::get('/api/user-scan-stats', [ScanController::class, 'getUserScanStats']);
+
+
 });
 
 // Auth routes (login, register, etc.)

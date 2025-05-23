@@ -5,17 +5,53 @@ use App\Models\User;
 use App\Models\Scan; // ✅ Add this line
 use App\Models\Shipment;
 use App\Models\Item;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     
-    public function dashboard()
-    {
-        // Get user information (example)
-        $user = auth()->user();
-        return view('users.dashboard', compact('user'));
-    }
+
+public function dashboard()
+{
+    $userId = auth()->id(); // current user
+    $user = User::find($userId);
+
+    $startOfWeek = Carbon::now()->startOfWeek();
+    $endOfWeek = Carbon::now()->endOfWeek();
+
+    // Total scans this week by user
+    $totalScansThisWeek = Scan::where('user_id', $userId)
+        ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+        ->count();
+
+    // Completed scans (status = 'completed' or whatever value you use)
+    $completedScans = Scan::where('user_id', $userId)
+        ->where('status', 'completed')
+        ->count();
+
+    // Pending scans (status = 'pending' or similar)
+    $pendingScans = Scan::where('user_id', $userId)
+        ->where('status', 'pending')
+        ->count();
+
+    // Last scan date
+    $lastScanDate = Scan::where('user_id', $userId)
+        ->latest('created_at')
+        ->value('created_at');
+
+    return view('users.dashboard', compact(
+        'user',
+        'totalScansThisWeek',
+        'completedScans',
+        'pendingScans',
+        'lastScanDate'
+    ));
+}
+
+   
 
        // Entry point to the barcode scanner
        public function scanner()
