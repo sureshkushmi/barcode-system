@@ -7,25 +7,33 @@
   <div class="container-fluid">
   <!-- Chart 1: Bar Chart – Quantity Scanned by User -->
   <div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-      <h3 class="card-title">Quantity Scanned by User</h3>
-    </div>
-    <div class="d-flex flex-wrap align-items-center mb-4 p-3">
-      <div class="me-3" style="min-width: 200px;">
+  <div class="card-header bg-primary text-white">
+    <h3 class="card-title mb-0">Quantity Scanned by User</h3>
+  </div>
+
+  <div class="card-body">
+    <div class="row g-3 align-items-end mb-4">
+      <!-- Filter by Today / This Week -->
+      <div class="col-md-3">
+        <label for="scan-filter" class="form-label fw-bold">Filter</label>
         <select id="scan-filter" class="form-select">
           <option value="day">Today</option>
           <option value="week">This Week</option>
-          <option value="range">Custom Range</option>
         </select>
       </div>
-      <div id="range-container" class="d-none" style="min-width: 250px;">
-        <input type="text" id="scan-date-range" class="form-control" placeholder="Select date range">
+
+      <!-- 📅 Filter by Date Range -->
+      <div class="col-md-4">
+        <label for="user-date-range" class="form-label fw-bold">📅 Filter by Date Range</label>
+        <input type="text" name="datetimes" id="user-date-range" class="form-control" placeholder="Select date range">
       </div>
     </div>
-    <div class="card-body">
-      <canvas id="user-scan-chart" height="100"></canvas>
-    </div>
+
+    <!-- Chart Area -->
+    <canvas id="user-scan-chart" height="100"></canvas>
   </div>
+</div>
+
 
   <div class="row">
   <!-- Chart 2: Scans by Status -->
