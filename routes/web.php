@@ -7,6 +7,7 @@ use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\ScanController;
 //use App\Http\Controllers\Admin\ShippingSettingController;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\ReportController;
 
 // Public route
 Route::get('/', function () {
@@ -38,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::POST('/scan/item/{itemId}', [ScanController::class, 'updateItem'])->name('update.item');
     Route::get('/scan/next', [ScanController::class, 'nextShipment'])->name('next.label');
     Route::get('/reports', [UserController::class, 'userReports'])->name('user.reports');
+    Route::get('/reports/user-scanning', [ReportController::class, 'userScanning'])->name('reports.user-scanning');
+
 });
 
 // User Role Routes
@@ -70,7 +73,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('superadmin')->name('superadmi
     Route::post('/shipping-settings', [ShippingController::class, 'update'])->name('settings.update');
     Route::get('/shipments', [ShippingController::class, 'indexShipments'])->name('shipments');
     Route::get('/shipments', [ShippingController::class, 'shipping'])->name('shipments');
-    Route::get('/reports', [UserController::class, 'userReports'])->name('reports');
+    //Route::get('/reports', [UserController::class, 'userReports'])->name('reports');
+    Route::get('/reports/allUser-scanning', [ReportController::class, 'allUsersScanning'])->name('reports.alluser-scanning');
 
 
     // scanning stats chart 

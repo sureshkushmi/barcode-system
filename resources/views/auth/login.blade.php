@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login | AdminLTE</title>
+  <title>Login | Barcode</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- AdminLTE & Bootstrap CSS -->

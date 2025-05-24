@@ -20,34 +20,40 @@
         </div>
       @endif
         <table class="table table-striped table-hover">
-          <thead class="thead-light">
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th style="width: 200px;">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($users as $user)
-              <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>
-                  <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-pencil-square"></i> Edit
-                  </a>
-                  <form action="{{ route('superadmin.users.destroy', $user->id) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
-                      <i class="bi bi-trash"></i> Delete
-                    </button>
-                  </form>
-                </td>
-              </tr>
-            @endforeach
-          </tbody>
-        </table>
+  <thead class="thead-light">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th style="width: 200px;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach($users as $user)
+      <tr>
+        <td>{{ $user->name }}</td>
+        <td>{{ $user->email }}</td>
+        <td>
+          <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-sm btn-primary">
+            <i class="bi bi-pencil-square"></i> Edit
+          </a>
+          <form action="{{ route('superadmin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </form>
+        </td>
+      </tr>
+    @endforeach
+  </tbody>
+</table>
+
+<!-- Pagination -->
+<div class="mt-3 d-flex justify-content-center">
+    {!! $users->links('vendor.pagination.bootstrap-5') !!}
+</div>
+
       </div>
     </div>
   </div>

@@ -115,7 +115,7 @@
           <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
         </div>
       </li>
-      <!-- Notifications Dropdown Menu -->
+      <!-- Notifications Dropdown Menu 
       <li class="nav-item dropdown">
         <a class="nav-link" data-bs-toggle="dropdown" href="#">
           <i class="bi bi-bell-fill"></i>
@@ -144,11 +144,12 @@
           </a>
         </div>
       </li>
+      -->
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-        <img src="{{ asset('img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />
+         <span class="d-none d-md-inline">{{ Auth::user()->name }}</span> 
+        <!-- <img src="{{ asset('img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />-->
 
-         <!-- <span class="d-none d-md-inline">Alexander Pierce</span> -->
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
           <!-- User image -->

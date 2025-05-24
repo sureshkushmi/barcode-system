@@ -10,7 +10,13 @@ class SuperadminController extends Controller
     // Show all users
     public function index()
     {
-        $users = User::where('status', 'active')->where('role', 'users')->get();
+        $users = User::where('status', 'active')
+             ->where(function ($query) {
+                 $query->where('role', 'users')
+                       ->orWhere('role', 'member');
+             })
+             ->paginate(10); // 10 users per page
+
         return view('superadmin.index', compact('users'));
         //$users = User::where('status', 'active')->where('role', 'users')->get();
        // return view('superadmin.index', compact('users'));

@@ -57,20 +57,20 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="{{ route('user.reports') }}" 
-                          class="nav-link {{ request()->routeIs('user.reports') ? 'active' : '' }}">
+                   <li class="nav-item">
+                        <a href="{{ route('superadmin.reports.alluser-scanning') }}" 
+                          class="nav-link {{ request()->routeIs('superadmin.reports.alluser-scanning') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-circle"></i>
-                            <p>Reports</p>
+                            <p>User Scanning Report</p>
                         </a>
-                    </li>
+                    </li> 
                 </ul>
 
               </li>
               @endif
               @if(Auth::user()->role == 'users')
               <li class="nav-item">
-                <a href="{{route('user.reports')}}" class="nav-link {{ request()->routeIs('user.reports') ? 'active' : '' }}">
+                <a href="{{route('reports.user-scanning')}}" class="nav-link {{ request()->routeIs('user.reports') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>My Reports</p>
                 </a>
