@@ -14,6 +14,10 @@
         <input type="text" name="datetimes" class="form-control me-2" placeholder="Select Date Range" value="{{ request('datetimes') }}">
         <button type="submit" class="btn btn-primary">Filter</button>
       </form>
+      <a href="{{ route('superadmin.reports.user-scanning.export', ['datetimes' => request('datetimes')]) }}" class="btn btn-outline-success ms-2">
+    <i class="bi bi-download"></i> Export Report
+</a>
+
     </div>
 
     <div class="card-body table-responsive p-0">
@@ -79,7 +83,7 @@
     </div>
 
     <div class="card-footer">
-      {{ $shipments->withQueryString()->links() }}
+    {!! $shipments->links('vendor.pagination.bootstrap-5') !!}
     </div>
   </div>
 </div>

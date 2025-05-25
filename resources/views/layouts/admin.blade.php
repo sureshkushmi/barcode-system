@@ -10,12 +10,8 @@
    
     {{-- Fonts (optional) --}}
     <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-      integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-      crossorigin="anonymous"
-    />
+   
+
     <!--end::Fonts-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link
@@ -26,15 +22,9 @@
     />
     <!--end::Third Party Plugin(OverlayScrollbars)-->
     <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-      integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-      crossorigin="anonymous"
-    />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 
-
+    <link rel="stylesheet" href="{{ asset('icons_main/font/bootstrap-icons.min.css') }}">
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
 
@@ -226,7 +216,7 @@ const chartCanvas = document.getElementById('user-scan-chart');
     }
 
     function fetchScanTrendData() {
-      fetch('/api/scan-trend-week')
+      fetch('/api/scan-over-time')
         .then(res => {
           if (!res.ok) throw new Error("Network response error");
           return res.json();
@@ -240,162 +230,95 @@ const chartCanvas = document.getElementById('user-scan-chart');
   }
 
 
-  // Creating dynamic data with date range users dashboard
   
-        // Chart 4: Daily Scans (Static)
-        const dailyScanChart = document.getElementById("daily-scans-chart");
-let chartInstance;
+});
+</script>
 
-function updateScanTrendChart(labels, data) {
-  if (chartInstance) {
-    chartInstance.data.labels = labels;
-    chartInstance.data.datasets[0].data = data;
-    chartInstance.update();
-  } else {
-    chartInstance = new Chart(dailyScanChart, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Items Scanned',
-          data: data,
-          backgroundColor: '#007bff'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } }
-      }
-    });
-  }
-}
+<script>
+  // Creating dynamic data with date range users dashboard
+  const dailyScanChart = document.getElementById("daily-scans-chart");
+  const scanStatusChart = document.getElementById("scan-status-chart");
+  const scanningTrendChart = document.getElementById("scanning-trend-chart");
 
-function fetchScanTrendData() {
-  fetch('/api/scan-trend-week', {
-    headers: {
-      'Accept': 'application/json',
-      // Add auth headers here if necessary
-    }
-  })
-    .then(res => {
-      if (!res.ok) throw new Error("Network response error");
-      return res.json();
-    })
-    .then(data => updateScanTrendChart(data.labels, data.data))
-    .catch(err => console.error("Scan trend fetch error:", err));
-}
+  let barChart, pieChart, lineChart;
 
-if (dailyScanChart) {
-  fetchScanTrendData();
-}
-
-        
-        
-
-        // Chart 5: User Status (Static)
-        const userStatusChart = document.getElementById("user-status-chart");
-let statusChartInstance;
-
-function updateStatusChart(data) {
-  if (statusChartInstance) {
-    statusChartInstance.data.datasets[0].data = [
-      data.completed,
-      data.pending,
-      data.failed
-    ];
-    statusChartInstance.update();
-  } else {
-    statusChartInstance = new Chart(userStatusChart, {
-      type: 'doughnut',
-      data: {
-        labels: ['Completed', 'Pending', 'Failed'],
-        datasets: [{
-          data: [
-            data.completed,
-            data.pending,
-            data.failed
-          ],
-          backgroundColor: ['#28a745', '#ffc107', '#dc3545']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } }
-      }
-    });
-  }
-}
-
-function fetchScanStatusOverview() {
-  fetch('/api/scan-status-overview', {
-    headers: {
-      'Accept': 'application/json',
-      // add auth headers if needed
-    }
-  })
-    .then(res => {
-      if (!res.ok) throw new Error("Network response error");
-      return res.json();
-    })
-    .then(data => updateStatusChart(data))
-    .catch(err => console.error("Scan status fetch error:", err));
-}
-
-if (userStatusChart) {
-  fetchScanStatusOverview();
-}
-
-
-        // Chart 6: User Trend (Static)
-        const userTrendChart = document.getElementById("user-trend-chart");
-let trendChartInstance;
-
-function updateUserTrendChart(labels, data) {
-  if (trendChartInstance) {
-    trendChartInstance.data.labels = labels;
-    trendChartInstance.data.datasets[0].data = data;
-    trendChartInstance.update();
-  } else {
-    trendChartInstance = new Chart(userTrendChart, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Scanned Items',
-          data: data,
-          borderColor: '#17a2b8',
-          fill: false,
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: true } }
-      }
-    });
-  }
-}
-
-function fetchUserTrendData() {
-  fetch('/api/user-scan-trend', {
-    headers: {
-      'Accept': 'application/json',
-      // Add auth headers if needed
-    }
-  })
-  .then(res => {
-    if (!res.ok) throw new Error("Network response error");
-    return res.json();
-  })
-  .then(data => updateUserTrendChart(data.labels, data.data))
-  .catch(err => console.error("User trend fetch error:", err));
-}
-
-if (userTrendChart) {
-  fetchUserTrendData();
-}
-
+  async function fetchDashboardStats() {
+    try {
+      const response = await fetch("/dashboard-stats-users", {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token') // adjust if you use sessions
+        }
       });
+
+      const data = await response.json();
+
+      // === 1. Bar Chart: My Daily Scans ===
+      if (barChart) barChart.destroy();
+      barChart = new Chart(dailyScanChart, {
+        type: 'bar',
+        data: {
+          labels: data.daily_labels,
+          datasets: [{
+            label: 'Items Scanned',
+            data: data.daily_data,
+            backgroundColor: '#007bff'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      // === 2. Pie Chart: Scan Status Overview ===
+      if (pieChart) pieChart.destroy();
+      pieChart = new Chart(scanStatusChart, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(data.status_data),
+          datasets: [{
+            data: Object.values(data.status_data),
+            backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+
+      // === 3. Line Chart: My Scanning Trend ===
+      if (lineChart) lineChart.destroy();
+      lineChart = new Chart(scanningTrendChart, {
+        type: 'line',
+        data: {
+          labels: data.daily_labels,
+          datasets: [{
+            label: 'Items Scanned Over Time',
+            data: data.daily_data,
+            borderColor: '#17a2b8',
+            backgroundColor: 'rgba(23,162,184,0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top'
+            }
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error("Failed to fetch dashboard stats:", error);
+    }
+  }
+
+  fetchDashboardStats();
 </script>
 
 <!-------- date picker ----------------------->

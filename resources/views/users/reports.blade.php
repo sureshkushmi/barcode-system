@@ -9,11 +9,14 @@
 <div class="container-fluid mt-4">
   <div class="card shadow">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="card-title">User Scanning Report</h3>
+      <h3 class="card-title">My Scanning Report</h3>
       <form method="GET" action="{{ route('reports.user-scanning') }}" class="d-flex">
         <input type="text" name="datetimes" class="form-control me-2" placeholder="Select Date Range" value="{{ request('datetimes') }}">
         <button type="submit" class="btn btn-primary">Filter</button>
       </form>
+            <a href="{{ route('reports.user-scanning.export', ['datetimes' => request('datetimes')]) }}" class="btn btn-outline-success ms-2" data-bs-toggle="tooltip">
+            <i class="bi bi-download"></i> Export to Excel
+            </a>
     </div>
 
     <div class="card-body table-responsive p-0">

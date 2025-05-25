@@ -46,10 +46,13 @@ Route::middleware('auth')->group(function () {
 // User Role Routes
 Route::middleware(['auth', 'role:users'])->group(function () {
     Route::get('/users/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
-    //Route::get('/scanner', [UserController::class, 'scanner'])->name('scanner.start');
+    Route::get('/user-scanning/export', [ReportController::class, 'exportUserScanning'])->name('reports.user-scanning.export');
+
    // Route::get('/reports', [UserController::class, 'reports'])->name('user.reports');
    // For Users Dashboard 
-   Route::get('/weekly-scans', [ScanController::class, 'totalScansThisWeekView'])->name('weekly.scans');
+   //Route::get('/weekly-scans', [ScanController::class, 'totalScansThisWeekView'])->name('weekly.scans');
+   Route::middleware(['auth'])->get('/dashboard-stats-users', [ScanController::class, 'getDashboardStatsUsers']);
+
 
 });
 
@@ -75,12 +78,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('superadmin')->name('superadmi
     Route::get('/shipments', [ShippingController::class, 'shipping'])->name('shipments');
     //Route::get('/reports', [UserController::class, 'userReports'])->name('reports');
     Route::get('/reports/allUser-scanning', [ReportController::class, 'allUsersScanning'])->name('reports.alluser-scanning');
-
-
-    // scanning stats chart 
-   // Route::get('/api/user-scan-stats', [ScanController::class, 'getUserScanStats']);
-
-
+    Route::get('/export-users', [ReportController::class, 'exportUsers'])->name('users.export');
+    Route::get('/reports/user-scanning/export', [ReportController::class, 'exportUserScanning'])->name('reports.user-scanning.export');
+    Route::get('/export-user-scanning', [ReportController::class, 'exportSuperadminUserScanning'])
+    ->name('reports.user-scanning.export');
 });
 
 // Auth routes (login, register, etc.)

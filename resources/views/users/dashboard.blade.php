@@ -73,7 +73,7 @@
     </div>
     <div class="card-body text-center">
       <div style="max-width: 300px; margin: auto;">
-        <canvas id="user-status-chart"></canvas>
+        <canvas id="scan-status-chart"></canvas>
       </div>
     </div>
   </div>
@@ -84,7 +84,7 @@
       <h3 class="card-title">📈 My Scanning Trend</h3>
     </div>
     <div class="card-body">
-      <canvas id="user-trend-chart" height="100"></canvas>
+      <canvas id="scanning-trend-chart" height="100"></canvas>
     </div>
   </div>
 

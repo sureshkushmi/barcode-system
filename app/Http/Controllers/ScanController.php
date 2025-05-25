@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 use Carbon\Carbon; 
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Shipment;
-
+use App\Models\Scan;
 
 
 class ScanController extends Controller
@@ -87,7 +89,10 @@ class ScanController extends Controller
     }
     }
 
-    // for chart Quantity Scanned by User
+
+
+     // Start  =   All charts for superadmin (admin) Dashboard
+    // for chart Quantity Scanned by User(1)
     public function getUserScanStats(Request $request)
 {
     $filter = $request->input('filter', 'week'); // default to week
@@ -109,6 +114,7 @@ class ScanController extends Controller
 
     return response()->json($query->get());
 }
+//======================= Scans by Status (II) charts===========
 
 public function getScanStatus()
     {
@@ -125,85 +131,85 @@ public function getScanStatus()
             'failed' => $statusCounts->get('Failed', 0),
         ]);
     }
-
-    public function weeklyScans()
+    //====================  Scans Over Time ====================
+    
+    public function scanOverTime(Request $request)
     {
-        $startDate = Carbon::now()->subDays(6)->startOfDay();
-        $endDate = Carbon::now()->endOfDay();
-
-        // Format: ['2025-05-17' => 10, '2025-05-18' => 5, ...]
-        $scans = DB::table('items')
-            ->select(DB::raw("DATE(created_at) as day"), DB::raw("count(*) as total"))
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy('day')
-            ->orderBy('day')
-            ->pluck('total', 'day');
-
-        $days = [];
-        $counts = [];
-
-        for ($i = 0; $i <= 6; $i++) {
-            $date = Carbon::now()->subDays(6 - $i)->format('Y-m-d');
-            $days[] = Carbon::parse($date)->format('D'); // Mon, Tue, etc.
-            $counts[] = $scans->get($date, 0);
+        // Last 30 days
+        $dates = collect();
+        for ($i = 29; $i >= 0; $i--) {
+            $dates->push(Carbon::today()->subDays($i)->format('Y-m-d'));
         }
+    
+        // Query scans grouped by date
+        $scans = Scan::selectRaw('DATE(scanned_at) as date, COUNT(*) as count')
+            ->whereBetween('scanned_at', [
+                Carbon::today()->subDays(29)->startOfDay(),
+                Carbon::today()->endOfDay()
+            ])
+            ->groupBy('date')
+            ->pluck('count', 'date'); // associative array: [ '2025-05-21' => 30 ]
 
+            //dd($scans);
+
+    
+        // Prepare chart data
+        $labels = [];
+        $data = [];
+    
+        foreach ($dates as $date) {
+            $labels[] = Carbon::parse($date)->format('M d'); // 'May 21'
+            $data[] = $scans->get($date, 0); // default to 0 if no data
+        }
+    
         return response()->json([
-            'labels' => $days,
-            'data' => $counts
+            'labels' => $labels,
+            'data' => $data,
         ]);
     }
+    
 
+//====================================End Superadmin (Admin) dashboard chart ================
 
-
-public function getScanSummary(Request $request)
+//====================================Start Users dashboard chart ================
+public function getDashboardStatsUsers(Request $request)
 {
-    $start = $request->start_date ? Carbon::parse($request->start_date) : Carbon::now()->subDays(7);
-    $end = $request->end_date ? Carbon::parse($request->end_date) : Carbon::now();
 
-    // Completed Scans count (sum quantity_scanned where status completed)
-    $completedScans = \DB::table('scans')
-        ->whereBetween('scanned_at', [$start, $end])
-        ->where('status', 'completed')
-        ->sum('quantity_scanned');
+    $user = Auth::user();
 
-    // Pending Scans count (sum quantity_scanned where status pending)
-    $pendingScans = \DB::table('scans')
-        ->whereBetween('scanned_at', [$start, $end])
-        ->where('status', 'pending')
-        ->sum('quantity_scanned');
+    if (!$user) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
 
-    // Last scan date
-    $lastScanDate = \DB::table('scans')
-        ->whereBetween('scanned_at', [$start, $end])
-        ->orderBy('scanned_at', 'desc')
-        ->value('scanned_at');
+    // Last 7 days
+    $dates = collect();
+    $quantities = collect();
+
+    for ($i = 6; $i >= 0; $i--) {
+        $date = Carbon::today()->subDays($i);
+        $dates->push($date->format('M d'));
+
+        // Sum quantity_scanned per day
+        $total = Scan::whereDate('scanned_at', $date)
+            ->where('user_id', $user->id)
+            ->sum('quantity_scanned');
+
+        $quantities->push($total);
+    }
+
+    // Status counts
+    $statusCounts = Scan::where('user_id', $user->id)
+        ->selectRaw('status, COUNT(*) as count')
+        ->groupBy('status')
+        ->pluck('count', 'status');
 
     return response()->json([
-        'completed' => $completedScans,
-        'pending' => $pendingScans,
-        'lastScanDate' => $lastScanDate ? Carbon::parse($lastScanDate)->format('M d, Y H:i') : 'No scans',
+        'daily_labels' => $dates,
+        'daily_data' => $quantities,
+        'status_data' => $statusCounts,
     ]);
 }
 
-
-
-//===============================Four Users Dashboard =========================
-//total scans this week 
-public function totalScansThisWeekView()
-{
-    $startOfWeek = now()->startOfWeek();
-    $endOfWeek = now()->endOfWeek();
-
-    $userId = Auth::id(); // get current logged-in user
-
-    $totalScansThisWeek = DB::table('scans')
-        ->where('user_id', $userId)
-        ->whereBetween('scanned_at', [$startOfWeek, $endOfWeek])
-        ->sum('quantity_scanned');
-
-    return view('users.dashboard', compact('totalScansThisWeek'));
-}
 
 
 }

@@ -10,6 +10,12 @@
         <a href="{{ route('superadmin.users.create') }}" class="btn btn-success">
           <i class="bi bi-plus-lg"></i> Add User
         </a>
+        
+                <a href="{{ route('superadmin.users.export') }}" class="btn btn-outline-success ms-2" data-bs-toggle="tooltip" title="Export all users to Excel">
+            <i class="bi bi-download"></i> Export Users
+        </a>
+
+
       </div>
 
       <div class="card-body">
@@ -24,6 +30,7 @@
     <tr>
       <th>Name</th>
       <th>Email</th>
+      <th>Role</th>
       <th style="width: 200px;">Actions</th>
     </tr>
   </thead>
@@ -32,6 +39,7 @@
       <tr>
         <td>{{ $user->name }}</td>
         <td>{{ $user->email }}</td>
+        <td>{{ $user->role }}</td>
         <td>
           <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-sm btn-primary">
             <i class="bi bi-pencil-square"></i> Edit

@@ -36,86 +36,7 @@
         </a>
       </li>-->
 
-      <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
-       <!-- <a class="nav-link" data-bs-toggle="dropdown" href="#">
-          <i class="bi bi-chat-text"></i>
-          <span class="navbar-badge badge text-bg-danger">3</span>
-        </a>-->
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="d-flex">
-              <div class="flex-shrink-0">
-                <img src="{{ asset('img/user1-128x128.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />  
-              </div>
-              <div class="flex-grow-1">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-end fs-7 text-danger">
-                    <i class="bi bi-star-fill"></i>
-                  </span>
-                </h3>
-                <p class="fs-7">Call me whenever you can...</p>
-                <p class="fs-7 text-secondary">
-                  <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="d-flex">
-              <div class="flex-shrink-0">
-
-                <img src="{{ asset('img/user8-128x128.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />
-              </div>
-              <div class="flex-grow-1">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-end fs-7 text-secondary">
-                    <i class="bi bi-star-fill"></i>
-                  </span>
-                </h3>
-                <p class="fs-7">I got your message bro</p>
-                <p class="fs-7 text-secondary">
-                  <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="d-flex">
-              <div class="flex-shrink-0">
-
-                <img src="{{ asset('img/user3-128x128.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />
-
-              </div>
-              <div class="flex-grow-1">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-end fs-7 text-warning">
-                    <i class="bi bi-star-fill"></i>
-                  </span>
-                </h3>
-                <p class="fs-7">The subject goes here</p>
-                <p class="fs-7 text-secondary">
-                  <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-        </div>
-      </li>
-      <!-- Notifications Dropdown Menu 
+          <!-- Notifications Dropdown Menu 
       <li class="nav-item dropdown">
         <a class="nav-link" data-bs-toggle="dropdown" href="#">
           <i class="bi bi-bell-fill"></i>
@@ -146,36 +67,33 @@
       </li>
       -->
       <li class="nav-item dropdown user-menu">
-        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-         <span class="d-none d-md-inline">{{ Auth::user()->name }}</span> 
-        <!-- <img src="{{ asset('img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />-->
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+        <!-- User icon -->
+        <i class="bi bi-person-circle me-1"></i> <!-- user icon -->
 
-        </a>
-        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-          <!-- User image -->
-        <!--  <li class="user-header text-bg-primary">
-            <img src="{{ asset('img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" />  
-             <p>
-              Alexander Pierce - Web Developer
-              <small>Member since Nov. 2023</small>
-            </p>
-          </li>-->
+        <!-- Username + dropdown arrow together -->
+        <span class="d-none d-md-inline">
+            {{ Auth::user()->name }}
+            <i class="bi bi-caret-down-fill ms-1"></i> <!-- dropdown arrow -->
+        </span>
+    </a>
 
-          <!-- Menu Footer-->
-          <li class="user-footer">
-  <div class="float-left">
-    <a href="{{ route('profile.edit') }}" class="btn btn-default btn-flat">Profile</a>
-  </div>
-  <div class="float-right">
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
-      @csrf
-      <button type="submit" class="btn btn-default btn-flat">Sign out</button>
-    </form>
-  </div>
+    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+        <!-- Menu Footer -->
+        <li class="user-footer d-flex justify-content-between px-3 py-2">
+            <a href="{{ route('profile.edit') }}" class="btn btn-default btn-flat">
+                <i class="fas fa-user-cog me-1"></i> Profile
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-default btn-flat">
+                    <i class="fas fa-sign-out-alt me-1"></i> Sign out
+                </button>
+            </form>
+        </li>
+    </ul>
 </li>
 
-        </ul>
-      </li>
     </ul>
   </div>
   <!--end::Container-->
