@@ -86,6 +86,9 @@
   <!-- Chart 1: Quantity Scanned by User (Bar Chart) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+  window.BASE_URL = "{{ url('/') }}";
+</script>
+  <script>
     document.addEventListener("DOMContentLoaded", function () {
 // 📊 User Scan Bar Chart
 const chartCanvas = document.getElementById('user-scan-chart');
@@ -101,7 +104,7 @@ const chartCanvas = document.getElementById('user-scan-chart');
     });
 
     function fetchScanStats(params = { filter: filterSelect.value || 'week' }) {
-      fetch(`/api/user-scan-stats?${new URLSearchParams(params)}`)
+      fetch(`${window.BASE_URL}/api/user-scan-stats?${new URLSearchParams(params)}`)
         .then(res => res.json())
         .then(data => {
           const labels = data.map(item => item.name);
@@ -169,7 +172,7 @@ const chartCanvas = document.getElementById('user-scan-chart');
     }
 
     function fetchStatusData() {
-      fetch('/api/scan-status-summary')
+      fetch(`${window.BASE_URL}/api/scan-status-summary`)
         .then(response => {
           if (!response.ok) throw new Error('Server Error');
           return response.json();
@@ -216,7 +219,7 @@ const chartCanvas = document.getElementById('user-scan-chart');
     }
 
     function fetchScanTrendData() {
-      fetch('/api/scan-over-time')
+      fetch(`${window.BASE_URL}/api/scan-over-time`)
         .then(res => {
           if (!res.ok) throw new Error("Network response error");
           return res.json();
@@ -244,7 +247,7 @@ const chartCanvas = document.getElementById('user-scan-chart');
 
   async function fetchDashboardStats() {
     try {
-      const response = await fetch("/dashboard-stats-users", {
+      const response = await fetch(`${window.BASE_URL}/dashboard-stats-users`, {
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('token') // adjust if you use sessions
