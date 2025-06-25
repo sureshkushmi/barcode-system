@@ -34,5 +34,10 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'shippingeasy' => [
+        'api_key' => env('SHIPPINGEASY_API_KEY'),
+        'api_secret' => env('SHIPPINGEASY_API_SECRET'),
+    ],
+    
 
 ];

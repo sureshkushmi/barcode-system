@@ -32,4 +32,8 @@ class Item extends Model
     {
         return $this->hasMany(Scan::class);
     }
+    public function kitItems()
+        {
+            return $this->hasMany(KitItem::class);
+        }
 }

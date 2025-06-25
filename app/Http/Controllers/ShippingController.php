@@ -1,12 +1,43 @@
 <?php
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\ShippingSetting;
 use App\Models\Shipment;
 
 class ShippingController extends Controller
 {
+    public function fetchOrders()
+{
+    $apiKey = '7b4d8c5e46f26df2de930b4264d27a13';
+    $apiSecret = '5b2e656e3d23767adadb7fd09fa351a659720fb1baab2828eb67635daaa451dc';
+    $storeApiKey = '78b54d9b1d4f36deb7427bb7a9f97bcc';
+    $baseUrl = 'https://app.shippingeasy.com';
+
+    $response = Http::withBasicAuth($apiKey, $apiSecret)
+    ->accept('application/json')
+    ->get("$baseUrl/api/orders", [
+        'store_api_key' => $storeApiKey,
+    ]);
+
+    if ($response->successful()) {
+        return response()->json([
+            'status' => 'success',
+            'orders' => $response->json(),
+        ]);
+    } else {
+        return response()->json([
+            'status' => 'error',
+            'code' => $response->status(),
+            'message' => $response->body(),
+        ]);
+    }
+}
+
+
+
+
+
     // Show form to edit ShippingEasy configuration
     public function edit()
     {

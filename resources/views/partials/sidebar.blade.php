@@ -44,7 +44,7 @@
                     <li class="nav-item">
                         <a href="{{ route('superadmin.settings.edit') }}" 
                           class="nav-link {{ request()->routeIs('superadmin.settings.edit') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-circle"></i>
+                            <i class="nav-icon bi bi-gear"></i>
                             <p>Configure ShippingEasy</p>
                         </a>
                     </li>
@@ -52,18 +52,41 @@
                     <li class="nav-item">
                         <a href="{{ route('superadmin.users') }}" 
                           class="nav-link {{ request()->routeIs('superadmin.users') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-circle"></i>
+                            <i class="nav-icon bi bi-people"></i>
                             <p>Manage Users</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('superadmin.messages.inbox') }}" 
+                           class="nav-link {{ request()->routeIs('superadmin.messages.inbox') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-envelope-open"></i>
+                            <p>Inbox</p>
+                        </a>
+                    </li>
+
+
+                     <li class="nav-item">
+                        <a href="{{ route('superadmin.messages.index') }}" 
+                          class="nav-link {{ request()->routeIs('superadmin.messages.index') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-chat-dots"></i>
+                            <p>Sent Messages</p>
+                        </a>
+                    </li> 
 
                    <li class="nav-item">
                         <a href="{{ route('superadmin.reports.alluser-scanning') }}" 
                           class="nav-link {{ request()->routeIs('superadmin.reports.alluser-scanning') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-circle"></i>
+                            <i class="nav-icon bi bi-clipboard-data"></i>
                             <p>User Scanning Report</p>
                         </a>
                     </li> 
+
+                    <li class="nav-item">
+                <a href="{{route('superadmin.orders')}}" class="nav-link {{ request()->routeIs('superadmin.orders') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>View Orders</p>
+                </a>
+              </li>
                 </ul>
 
               </li>
@@ -71,22 +94,29 @@
               @if(Auth::user()->role == 'users')
               <li class="nav-item">
                 <a href="{{route('reports.user-scanning')}}" class="nav-link {{ request()->routeIs('user.reports') ? 'active' : '' }}">
-                  <i class="nav-icon bi bi-palette"></i>
+                  <i class="nav-icon bi bi-graph-up"></i>
                   <p>My Reports</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{route('scan.label.form')}}" class="nav-link {{ request()->routeIs('scan.label.form') ? 'active' : '' }}">
-                  <i class="nav-icon bi bi-palette"></i>
+                  <i class="nav-icon bi bi-upc-scan"></i>
                   <p>Scan Shipping Label</p>
                 </a>
               </li>
-              <!--<li class="nav-item">
-                <a href="{{route('scan.item.form')}}" class="nav-link {{ request()->routeIs('scan.item.form') ? 'active' : '' }}">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Scan Shipment Items</p>
+              <li class="nav-item">
+                <a href="{{route('users.orders')}}" class="nav-link {{ request()->routeIs('users.orders') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-card-list"></i>
+                  <p>View Orders</p>
                 </a>
-              </li> -->
+              </li>
+               <li class="nav-item">
+                        <a href="{{ route('users.messages.index') }}" 
+                          class="nav-link {{ request()->routeIs('users.messages.index') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-inbox"></i>
+                            <p>Messages</p>
+                        </a>
+                    </li> 
               @endif 
                 </ul>
               </li>
