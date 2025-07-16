@@ -1,18 +1,12 @@
 @extends('layouts.admin')
 @section('title', 'User Scan Report')
-
-@push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-@endpush
-
 @section('content')
 <div class="container-fluid mt-4">
   <div class="card shadow">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h3 class="card-title">Item Scanning Report for User</h3>
       <form method="GET" class="d-flex align-items-center">
-        <input type="text" name="orderDateRange" id="order-date-range" class="form-control me-2"
-          placeholder="Select date range" value="{{ request('orderDateRange') }}">
+       <input type="text" name="orderDateRange" id="order-date-range" class="form-control me-2" placeholder="Select date range" value="{{ request('orderDateRange') }}">
         <input type="hidden" name="user_id" value="{{ request('user_id') }}">
         <button type="submit" class="btn btn-primary">Filter</button>
       </form>
@@ -121,24 +115,3 @@
 </div>
 @endsection
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script>
-  $(function () {
-    $('#order-date-range').daterangepicker({
-      autoUpdateInput: false,
-      locale: {
-        cancelLabel: 'Clear'
-      }
-    });
-
-    $('#order-date-range').on('apply.daterangepicker', function (ev, picker) {
-      $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-    });
-
-    $('#order-date-range').on('cancel.daterangepicker', function (ev, picker) {
-      $(this).val('');
-    });
-  });
-</script>
-@endpush

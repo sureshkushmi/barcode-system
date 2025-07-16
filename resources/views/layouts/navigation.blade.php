@@ -113,7 +113,7 @@
                 <x-responsive-nav-link :href="route('superadmin.users')" :active="request()->routeIs('superadmin.users')">
                     {{ __('Manage Users') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('superadmin.reports')" :active="request()->routeIs('superadmin.reports')">
+                <x-responsive-nav-link :href="route('superadmin.reports.alluser-scanning')" :active="request()->routeIs('superadmin.reports.alluser-scanning')">
                     {{ __('Reports') }}
                 </x-responsive-nav-link>
             @endif

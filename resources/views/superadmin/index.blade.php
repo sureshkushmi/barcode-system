@@ -31,7 +31,7 @@
       <th>Name</th>
       <th>Email</th>
       <th>Role</th>
-      <th style="width: 200px;">Actions</th>
+      <th style="width: 300px;">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -41,6 +41,11 @@
         <td>{{ $user->email }}</td>
         <td>{{ $user->role }}</td>
         <td>
+               <a href="{{ route('superadmin.reports.relateduser-scanning', $user->id) }}" class="btn btn-sm btn-info">
+                  <i class="bi bi-bar-chart-line-fill"></i> Scan Report
+                </a>
+
+
           <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-sm btn-primary">
             <i class="bi bi-pencil-square"></i> Edit
           </a>
@@ -57,6 +62,21 @@
   </tbody>
 </table>
 
+<div class="modal fade" id="scanReportModal" tabindex="-1" aria-labelledby="scanReportLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="scanReportLabel">User Scanning Report</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="scan-report-content">
+        <div class="text-center">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Pagination -->
 <div class="mt-3 d-flex justify-content-center">
     {!! $users->links('vendor.pagination.bootstrap-5') !!}
@@ -66,3 +86,75 @@
     </div>
   </div>
 @endsection
+@push('scripts')
+<script>
+  $(document).on('click', '.show-scan-report', function () {
+    const userId = $(this).data('user-id');
+    const baseUrl = "{{ url('/') }}";
+    $('#scan-report-content').html('<div class="text-center">Loading...</div>');
+
+    $.ajax({
+      url: baseUrl + '/superadmin/user-scan-report/' + userId,
+      method: 'GET',
+      success: function (response) {
+        if (response.success) {
+            console.log("AJAX Response:", response);
+
+          const data = response.data;
+          let html = `
+            <p><strong>Scans Today:</strong> ${data.scansToday}</p>
+            <p><strong>Scans This Week:</strong> ${data.scansWeek}</p>
+            <p><strong>Total Scans:</strong> ${data.scansTotal}</p>
+            <hr>
+            <h6>Recent Scan Details</h6>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Barcode</th>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Scanned Qty</th>
+                    <th>Scanned At</th>
+                  </tr>
+                </thead>
+                <tbody>`;
+
+          if (data.details.length === 0) {
+            html += `<tr><td colspan="7" class="text-center text-muted">No scan history found.</td></tr>`;
+          } else {
+            data.details.forEach((item, index) => {
+              html += `
+                <tr>
+                  <td>${index + 1}</td>
+                  <td>${item.item_name}</td>
+                  <td>${item.barcode}</td>
+                  <td>${item.shippingeasy_order_id}</td>
+                  <td>${item.customer_name}</td>
+                  <td>${item.quantity_scanned}</td>
+                  <td>${item.scanned_at}</td>
+                </tr>`;
+            });
+          }
+
+          html += `
+                </tbody>
+              </table>
+            </div>
+          `;
+
+          $('#scan-report-content').html(html);
+        } else {
+          $('#scan-report-content').html('<p class="text-danger">Failed to load scan report.</p>');
+        }
+      },
+      error: function () {
+        $('#scan-report-content').html('<p class="text-danger">Error loading scan report.</p>');
+      }
+    });
+  });
+</script>
+
+@endpush

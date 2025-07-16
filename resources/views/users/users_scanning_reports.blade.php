@@ -1,116 +1,96 @@
-@extends('layouts.admin') {{-- Your AdminLTE master layout --}}
+@extends('layouts.admin')
 
-@section('title', 'User Scanning Report')
+@section('title', 'User Scan Report')
 
-@push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-@endpush
 
 @section('content')
 <div class="container-fluid mt-4">
   <div class="card shadow">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="card-title">User Scanning Report</h3>
+      <h3 class="card-title">Item Scanning Report by User</h3>
 
-      <form method="GET" action="{{ route('reports.user-scanning') }}" class="d-flex">
-        <input 
-          type="text" 
-          name="datetimes" 
-          class="form-control me-2" 
-          placeholder="Select Date Range" 
-          value="{{ request('datetimes') }}"
-          autocomplete="off"
-        >
+      <form method="GET" class="d-flex align-items-center">
+        <select name="user_id" class="form-select me-2" onchange="this.form.submit()">
+          <option value="">All Users</option>
+          @foreach($users as $user)
+            <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+              {{ $user->name }}
+            </option>
+          @endforeach
+        </select>
         <button type="submit" class="btn btn-primary">Filter</button>
       </form>
-
-      <a href="{{ route('reports.relatedUser-scanning.export', ['datetimes' => request('datetimes')]) }}" class="btn btn-outline-success ms-2">
-        <i class="bi bi-download"></i> Export Report
-      </a>
     </div>
 
     <div class="card-body table-responsive p-0">
       <table class="table table-hover text-nowrap">
         <thead class="table-light">
           <tr>
-            <th>Shipment Tracking #</th>
-            <th>Total Qty</th>
-            <th>Quantity Scanned</th>
-            <th>Scanned At</th>
+            <th>Order ID / Number</th>
+            <th>Customer Name</th>
+            <th>Order Date</th>
             <th>Status</th>
+            <th>Tracking #</th>
             <th>Details</th>
           </tr>
         </thead>
         <tbody>
-          @forelse($shipments as $shipment)
+          @forelse($items as $item)
           <tr>
-            <td>{{ $shipment->tracking_number }}</td>
-            <td>{{ $shipment->total_qty }}</td>
-            <td>{{ $shipment->scanned_qty }}</td>
-            <td>{{ $shipment->scanned_at ?? 'N/A' }}</td>
+            <td>{{ $item->shippingeasy_order_id }}</td>
+            <td>{{ $item->customer_name }}</td>
+            <td>{{ $item->order_date }}</td>
+            <td>{{ ucfirst($item->status) }}</td>
+            <td>{{ $item->tracking_number ?? '-' }}</td>
             <td>
-              <span class="badge bg-{{ strtolower($shipment->status) === 'delivered' ? 'success' : (strtolower($shipment->status) === 'pending' ? 'warning' : 'secondary') }}">
-                {{ ucfirst($shipment->status) }}
-              </span>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $shipment->id }}">View</button>
+              <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $item->item_id }}">
+                View
+              </button>
 
               <!-- Modal -->
-              <div class="modal fade" id="detailsModal{{ $shipment->id }}" tabindex="-1" aria-labelledby="detailsLabel{{ $shipment->id }}" aria-hidden="true">
+              <div class="modal fade" id="detailsModal{{ $item->item_id }}" tabindex="-1" aria-labelledby="detailsLabel{{ $item->item_id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                   <div class="modal-content">
 
                     <div class="modal-header bg-primary text-white">
-                      <h5 class="modal-title" id="detailsLabel{{ $shipment->id }}">Shipment Details</h5>
+                      <h5 class="modal-title" id="detailsLabel{{ $item->item_id }}">
+                        Scan Details for - {{ $item->item_name }}
+                      </h5>
                       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
-                      <div class="mb-3">
-                        <strong>Status:</strong> 
-                        <span class="badge bg-{{ strtolower($shipment->status) === 'pending' ? 'warning' : (strtolower($shipment->status) === 'delivered' ? 'success' : 'secondary') }}">
-                          {{ ucfirst($shipment->status) }}
-                        </span>
-                      </div>
-
-                      <div class="row mb-3">
-                        <div class="col-md-12"><strong>Tracking Number:</strong> {{ $shipment->tracking_number }}</div>
-                        <div class="col-md-12"><strong>Scan Date:</strong> {{ $shipment->scanned_at ?? 'N/A' }}</div>
-                        <div class="col-md-12"><strong>Scan By:</strong> {{ $scannedItems[$shipment->id]->first()->scanned_by ?? 'Unknown' }}</div>
-                      </div>
+                      <p><strong>Barcode:</strong> {{ $item->barcode }}</p>
+                      <p><strong>Order ID:</strong> {{ $item->order_id }}</p>
+                      <p><strong>Customer:</strong> {{ $item->customer_name }}</p>
+                      <p><strong>Tracking #:</strong> {{ $item->tracking_number ?? 'N/A' }}</p>
 
                       <hr>
 
-                      <h6>Scanned Items:</h6>
-
-                      <table class="table table-sm table-bordered table-hover">
+                      <h6>Scan History</h6>
+                      <table class="table table-sm table-bordered">
                         <thead class="table-light">
                           <tr>
-                            <th style="width: 5%;">#</th>
-                            <th>Item Name</th>
-                            <th style="width: 15%;">Total Qty</th>
-                            <th style="width: 15%;">Scanned Qty</th>
-                            <th style="width: 20%;">Barcode</th>
-                            <th>Notes</th>
+                            <th>#</th>
+                            <th>Scanned By</th>
+                            <th>Quantity</th>
+                            <th>Scanned At</th>
                           </tr>
                         </thead>
                         <tbody>
-                          @php $counter = 1; @endphp
-                          @foreach($scannedItems[$shipment->id] ?? [] as $item)
+                          @php $i = 1; @endphp
+                          @foreach($scanDetails[$item->item_id] ?? [] as $scan)
                           <tr>
-                            <td>{{ $counter++ }}</td>
-                            <td>{{ $item->item_name }}</td>
-                            <td>{{ $item->total_quantity }}</td>
-                            <td>{{ $item->quantity_scanned }}</td>
-                            <td>{{ $item->barcode }}</td>
-                            <td>{{ $item->notes ?? '-' }}</td>
+                            <td>{{ $i++ }}</td>
+                            <td>{{ $scan->scanned_by }}</td>
+                            <td>{{ $scan->quantity_scanned }}</td>
+                            <td>{{ $scan->scanned_at }}</td>
                           </tr>
                           @endforeach
 
-                          @if(empty($scannedItems[$shipment->id]) || count($scannedItems[$shipment->id]) === 0)
+                          @if(empty($scanDetails[$item->item_id]))
                           <tr>
-                            <td colspan="6" class="text-center text-muted">No scanned items available.</td>
+                            <td colspan="4" class="text-center text-muted">No scan data available.</td>
                           </tr>
                           @endif
                         </tbody>
@@ -124,12 +104,11 @@
                   </div>
                 </div>
               </div>
-
             </td>
           </tr>
           @empty
           <tr>
-            <td colspan="6" class="text-center">No data found for selected date range.</td>
+            <td colspan="6" class="text-center">No items found for selected user.</td>
           </tr>
           @endforelse
         </tbody>
@@ -137,27 +116,9 @@
     </div>
 
     <div class="card-footer">
-      {!! $shipments->withQueryString()->links('vendor.pagination.bootstrap-5') !!}
+      {!! $items->appends(request()->query())->links('vendor.pagination.bootstrap-5') !!}
     </div>
   </div>
 </div>
 @endsection
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
-<script>
-  $(function () {
-    $('input[name="datetimes"]').daterangepicker({
-      timePicker: true,
-      startDate: moment().subtract(7, 'days'),
-      endDate: moment(),
-      locale: {
-        format: 'M/DD hh:mm A'
-      }
-    });
-  });
-</script>
-@endpush

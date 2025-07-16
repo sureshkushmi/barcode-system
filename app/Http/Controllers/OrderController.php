@@ -69,7 +69,7 @@ class OrderController extends Controller
         'order' => $order
     ]);
 }
-public function checkTrackingNumber($tracking_number)
+public function syncOrdersFromShippingEasyTest()
 {
     $apiKey = '7b4d8c5e46f26df2de930b4264d27a13';
     $apiSecret = '5b2e656e3d23767adadb7fd09fa351a659720fb1baab2828eb67635daaa451dc';
@@ -85,10 +85,159 @@ public function checkTrackingNumber($tracking_number)
         $response = $sear->request($method, $path, $params, null, $apiKey, $apiSecret);
 
         if (isset($response['orders']) && is_array($response['orders'])) {
+            $syncedOrderCount = 0;
+            $syncedItemCount = 0;
+            $skippedOrders = []; // ✅ collect orders without tracking number
+
             foreach ($response['orders'] as $order) {
+                $orderModel = \App\Models\Order::updateOrCreate(
+                    ['shippingeasy_order_id' => $order['alternate_order_id']],
+                    [
+                        'customer_name' => trim(($order['billing_first_name'] ?? '') . ' ' . ($order['billing_last_name'] ?? '')),
+                        'customer_email' => $order['billing_email'] ?? null,
+                        'status' => $order['order_status'] ?? null,
+                        'order_date' => $order['ordered_at'] ?? null,
+                    ]
+                );
+
+                $syncedOrderCount++;
+
+                $shipment_id = null;
+
                 if (!empty($order['shipments'][0])) {
                     $shipment = $order['shipments'][0];
-                    if (!empty($shipment['tracking_number']) && $shipment['tracking_number'] === $tracking_number) {
+
+                    if (empty($shipment['tracking_number'])) {
+                        // ✅ Track skipped orders
+                        $skippedOrders[] = [
+                            'order_id' => $orderModel->id,
+                            'shippingeasy_order_id' => $order['alternate_order_id'],
+                            'customer_name' => $orderModel->customer_name,
+                            'status' => $orderModel->status,
+                            'order_date' => $orderModel->order_date
+                        ];
+                        continue;
+                    }
+
+                    $shipmentModel = \App\Models\Shipment::updateOrCreate(
+                        ['tracking_number' => $shipment['tracking_number']],
+                        [
+                            'status' => $shipment['workflow_state'] ?? null,
+                            'order_id' => $orderModel->id,
+                        ]
+                    );
+
+                    $shipment_id = $shipmentModel->id;
+                }
+
+                // Item logic...
+                $itemTracker = [];
+                foreach ($order['recipients'] ?? [] as $recipient) {
+                    foreach ($recipient['line_items'] ?? [] as $item) {
+                        $sku = trim($item['sku'] ?? '');
+                        if ($sku === '') continue;
+
+                        $itemName = $item['item_name'] ?? '';
+                        $quantity = (int) ($item['quantity'] ?? 1);
+
+                        if (isset($itemTracker[$sku])) {
+                            $itemTracker[$sku]['quantity'] += $quantity;
+                        } else {
+                            $itemTracker[$sku] = [
+                                'barcode' => $sku,
+                                'shipment_id' => $shipment_id,
+                                'order_id' => $orderModel->id,
+                                'name' => $itemName,
+                                'quantity' => $quantity,
+                            ];
+                        }
+                    }
+                }
+
+                $updatedItemIds = [];
+                foreach ($itemTracker as $itemData) {
+                    $multiplier = 1;
+                    if (preg_match('/x(\d+)-/', $itemData['barcode'], $matches)) {
+                        $multiplier = (int) $matches[1];
+                    }
+
+                    $finalQuantity = $itemData['quantity'] * $multiplier;
+
+                    $item = \App\Models\Item::updateOrCreate(
+                        [
+                            'barcode' => $itemData['barcode'],
+                            'order_id' => $itemData['order_id'],
+                        ],
+                        [
+                            'shipment_id' => $itemData['shipment_id'],
+                            'name' => $itemData['name'],
+                            'quantity' => $itemData['quantity'],
+                            'required_quantity' => $finalQuantity,
+                            'total_quantity' => $finalQuantity,
+                            'completed' => 0,
+                            'scanned_quantity' => 0,
+                            'updated_at' => now(),
+                        ]
+                    );
+
+                    $updatedItemIds[] = $item->id;
+                    $syncedItemCount++;
+                }
+
+                \App\Models\Item::where('order_id', $orderModel->id)
+                    ->whereNotIn('id', $updatedItemIds)
+                    ->delete();
+            }
+
+            // ✅ Return skipped orders to the view
+            return view('orders.syncdata', [
+                'success' => true,
+                'orderCount' => $syncedOrderCount,
+                'itemCount' => $syncedItemCount,
+                'skippedOrders' => $skippedOrders
+            ]);
+        } else {
+            return view('orders.syncdata', [
+                'error' => 'No orders found in response.'
+            ]);
+        }
+    } catch (\Exception $e) {
+        \Log::error('ShippingEasy Sync Failed: ' . $e->getMessage());
+        return view('orders.syncdata', [
+            'error' => $e->getMessage()
+        ]);
+    }
+}
+
+public function checkTrackingNumber($tracking_number)
+{
+    $apiKey = '7b4d8c5e46f26df2de930b4264d27a13';
+    $apiSecret = '5b2e656e3d23767adadb7fd09fa351a659720fb1baab2828eb67635daaa451dc';
+    $method = "get";
+    $path = "/api/orders";
+    $perPage = 100;
+    $page = 1;
+
+    try {
+        $sear = new \ShippingEasy_ApiRequestor();
+
+        do {
+            $params = [
+                "api_key" => $apiKey,
+                "api_timestamp" => time(),
+                "page" => $page,
+                "per_page" => $perPage
+            ];
+
+            $response = $sear->request($method, $path, $params, null, $apiKey, $apiSecret);
+
+            if (!isset($response['orders']) || !is_array($response['orders']) || empty($response['orders'])) {
+                break;
+            }
+
+            foreach ($response['orders'] as $order) {
+                foreach ($order['shipments'] ?? [] as $shipment) {
+                    if (!empty($shipment['tracking_number']) && trim($shipment['tracking_number']) === trim($tracking_number)) {
                         return response()->json([
                             'success' => true,
                             'message' => '✅ Tracking number found.',
@@ -101,16 +250,13 @@ public function checkTrackingNumber($tracking_number)
                 }
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => '❌ Tracking number not found in ShippingEasy orders.'
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'No orders returned from ShippingEasy.'
-            ]);
-        }
+            $page++;
+        } while (count($response['orders']) === $perPage); // Continue while there might be more pages
+
+        return response()->json([
+            'success' => false,
+            'message' => '❌ Tracking number not found in ShippingEasy orders.'
+        ]);
     } catch (\Exception $e) {
         \Log::error('ShippingEasy Check Failed: ' . $e->getMessage());
         return response()->json([

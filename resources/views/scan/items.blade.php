@@ -1,71 +1,86 @@
+@php use Illuminate\Support\Str; @endphp
+
 @extends('layouts.admin')
 
-@section('title', 'Shipment Items')
+@section('title', 'Scan Items')
 
 @section('content')
-<div class="container-fluid py-3">
-    <div class="row">
-        <div class="col-12">
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
 
-            <div class="card card-primary card-outline">
-                <div class="card-header">
-                    <h3 class="card-title">Shipment Items for Tracking #{{ $shipment->tracking_number }}</h3>
-                </div>
-
-                <div class="card-body">
-                    @if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Item Name</th>
-                                    <th>Total Qty</th>
-                                    <th>Scanned Qty</th>
-                                    <th>Status</th>
-                                    <th>Scan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($shipment->items as $item)
-                                    <tr>
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->required_quantity }}</td>
-                                        <td>{{ $item->scanned_quantity }}</td>
-                                        <td>
-                                            @if($item->completed)
-                                                <span class="badge badge-success">✅ Completed</span>
-                                            @elseif($item->scanned_quantity > 0)
-                                                <span class="badge badge-warning">⏳ Partial</span>
-                                            @else
-                                                <span class="badge badge-secondary">🕓 Not Started</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <form method="POST" action="{{ route('update.item', $item->id) }}">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-primary">Scan</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted">No items found for this shipment.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <form method="GET" action="{{ route('next.label') }}">
-                        <button type="submit" class="btn btn-success">Next Shipment</button>
-                    </form>
-                </div>
-            </div>
-
+      {{-- Shipment Info and Scan Form --}}
+      <div class="card card-primary shadow-sm mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Scan Items</h3>
         </div>
+
+        <div class="card-body">
+          <h5 class="mb-3"><strong>Shipment:</strong> {{ $shipment->tracking_number }}</h5>
+
+          @if ($errors->any())
+            <div class="alert alert-danger">
+              <ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+            </div>
+          @endif
+
+          @if (session('error')) 
+            <div class="alert alert-danger">{{ session('error') }}</div> 
+          @endif
+          @if (session('success')) 
+            <div class="alert alert-success">{{ session('success') }}</div> 
+          @endif
+
+          <form method="POST" action="{{ route('submit.item.scan', $shipment->id) }}">
+            @csrf
+            <div class="form-group mb-3">
+              <label for="barcode" class="form-label">Scan Item Barcode</label>
+              <input type="text" name="barcode" id="barcode" class="form-control" required autofocus>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Scan</button>
+          </form>
+        </div>
+      </div>
+
+      {{-- Required Items Table --}}
+      <div class="card card-secondary shadow-sm">
+        <div class="card-header">
+          <h4 class="card-title">Required Items</h4>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+            <thead class="table-light">
+              <tr>
+                <th>Order Quantity</th>
+                <th>Required Qty</th>
+                <th>Scanned Qty</th>
+                <th>Barcode</th>
+                <th>Item Name</th>
+                
+                
+              </tr>
+            </thead>
+            <tbody>
+              @forelse ($shipment->items as $item)
+                <tr>
+                  <td>{{ $item->quantity }}</td>
+                  <td>{{ $item->required_quantity }}</td>
+                     @php
+                      $scannedQty = \App\Models\Scan::where('item_id', $item->id)->sum('quantity_scanned');
+                     @endphp
+                    <td>{{ $scannedQty }}</td>
+                  <td>{{ $item->barcode }}</td>
+                  <td>{{ Str::limit($item->name, 60) }}</td>
+                </tr>
+              @empty
+                <tr><td colspan="7" class="text-center">No items found.</td></tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
+  </div>
 </div>
 @endsection

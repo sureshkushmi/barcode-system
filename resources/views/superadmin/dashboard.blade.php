@@ -5,34 +5,43 @@
 @section('content')
   <!--begin::App Main-->
   <div class="container-fluid">
-  <!-- Chart 1: Bar Chart – Quantity Scanned by User -->
-  <div class="card mb-4">
-  <div class="card-header bg-primary text-white">
-    <h3 class="card-title mb-0">Quantity Scanned by User</h3>
-  </div>
-
-  <div class="card-body">
-    <div class="row g-3 align-items-end mb-4">
-      <!-- Filter by Today / This Week -->
-      <div class="col-md-3">
-        <label for="scan-filter" class="form-label fw-bold">Filter</label>
-        <select id="scan-filter" class="form-select">
-          <option value="day">Today</option>
-          <option value="week" selected>This Week</option>
-        </select>
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">
+        <h3 class="card-title mb-0">🏆 Top Customers by Orders</h3>
       </div>
-
-      <!-- 📅 Filter by Date Range -->
-      <div class="col-md-4">
-  <label for="user-date-range" class="form-label fw-bold">📅 Filter by Date Range</label>
-  <input type="text" name="datetimes" id="user-date-range" class="form-control" placeholder="Select date range">
-</div>
+      <div class="card-body">
+        <canvas id="top-customers-chart" height="100"></canvas>
+      </div>
+  </div>
+  <!-- Chart 1: Bar Chart â€“ Quantity Scanned by User 
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h3 class="card-title mb-0">Quantity Scanned by User</h3>
     </div>
 
-    <!-- Chart Area -->
+  <div class="card-body">
+
+    <div class="row g-3 align-items-end mb-4">
+       Filter by Today / This Week 
+      <div class="col-md-3">
+          <label for="scan-filter" class="form-label fw-bold">Filter</label>
+              <select id="scan-filter" class="form-select">
+                <option value="day">Today</option>
+                <option value="week" selected>This Week</option>
+              </select>
+      </div>
+
+        Filter by Date Range 
+        <div class="col-md-4">
+          <label for="user-date-range" class="form-label fw-bold">Filter by Date Range</label>
+          <input type="text" name="datetimes" id="user-date-range" class="form-control" placeholder="Select date range">
+        </div>
+    </div>
+
+     Chart Area 
     <canvas id="user-scan-chart" height="100"></canvas>
   </div>
-</div>
+</div> -->
 
 
   <div class="row">

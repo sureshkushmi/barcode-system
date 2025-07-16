@@ -19,7 +19,7 @@ Route::get('/', function () {
 });
 Route::post('/logoutusers', function () {
     Auth::logout();
-    return redirect('https://scan.merodomain.com/public/login');
+    return redirect('/');
 })->name('logoutusers');
 // Dashboard (shared)
 
@@ -29,7 +29,7 @@ Route::get('/dashboard', function () {
 //Route::get('/scanapistore', [UserMessageController::class, 'syncOrdersFromShippingEasyTest']);
 
 // For testing approach
-Route::get('/syncOrders', [OrderController::class, 'syncOrdersFromShippingEasyTest']);
+Route::get('/syncOrdersTest', [OrderController::class, 'syncOrdersFromShippingEasyTest']);
 Route::get('/check-tracking/{tracking_number}', [OrderController::class, 'checkTrackingNumber']);
 Route::get('/scanapi', [ScanController::class, 'test1']);
 

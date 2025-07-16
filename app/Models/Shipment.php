@@ -24,5 +24,9 @@ class Shipment extends Model
     {
         return $this->hasMany(Scan::class);
     }
+    public function kits()
+    {
+        return $this->hasMany(Kit::class);
+    }
     
 }

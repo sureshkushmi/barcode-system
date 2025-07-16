@@ -10,12 +10,15 @@ class Item extends Model
     use HasFactory;
 
     protected $fillable = [
+         'barcode',
         'shipment_id',
+        'order_id',
         'name',
-        'barcode',
+        'quantity',
         'required_quantity',
-        'scanned_quantity',
+        'total_quantity',
         'completed',
+        'scanned_quantity',
     ];
 
     protected $casts = [
@@ -32,4 +35,8 @@ class Item extends Model
     {
         return $this->hasMany(Scan::class);
     }
+    public function kitItems()
+        {
+            return $this->hasMany(KitItem::class);
+        }
 }

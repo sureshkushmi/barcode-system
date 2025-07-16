@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'AdminLTE Dashboard')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>@yield('title', 'Barcode Dashboard')</title>
 
     {{-- AdminLTE CSS --}}
     <link href="{{ asset('adminlte/dist/css/adminlte.min.css') }}" rel="stylesheet">
@@ -89,13 +91,79 @@
   window.BASE_URL = "{{ url('/') }}";
 </script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-// 📊 User Scan Bar Chart
-const chartCanvas = document.getElementById('user-scan-chart');
-  const filterSelect = document.getElementById('scan-filter');
-  const dateRangeInput = document.querySelector('input[name="datetimes"]');
+  $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
 
-  if (chartCanvas && filterSelect && dateRangeInput) {
+    document.addEventListener("DOMContentLoaded", function () {
+//User Scan Bar Chart
+    const chartCanvas = document.getElementById('top-customers-chart');
+    const filterSelect = document.getElementById('scan-filter');
+    const dateRangeInput = document.querySelector('input[name="datetimes"]');
+    
+    //  Top Customers Bar Chart
+const topCustomersElem = document.getElementById("top-customers-chart");
+if (topCustomersElem) {
+  const ctx = topCustomersElem.getContext('2d');
+  let topCustomersChart;
+
+  function updateTopCustomersChart(data) {
+    const labels = Object.keys(data.customers);     // Customer names
+    const counts = Object.values(data.customers);   // Order counts
+
+    if (topCustomersChart) {
+      topCustomersChart.data.labels = labels;
+      topCustomersChart.data.datasets[0].data = counts;
+      topCustomersChart.update();
+    } else {
+      topCustomersChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Total Orders',
+            data: counts,
+            backgroundColor: 'rgba(0,166,90,0.9)',
+            borderColor: 'rgba(0,166,90,1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'Orders' }
+            },
+            x: {
+              title: { display: true, text: 'Customers' }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+  }
+
+  function fetchTopCustomersData() {
+    fetch(`${window.BASE_URL}/api/top-customers`)
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to load data');
+        return response.json();
+      })
+      .then(data => updateTopCustomersChart(data))
+      .catch(error => console.error('Error fetching top customers:', error));
+  }
+
+  fetchTopCustomersData();
+  setInterval(fetchTopCustomersData, 60000); // Refresh every 60 seconds
+}
+
+
+
+  /*if (chartCanvas && filterSelect && dateRangeInput) {
     const ctx = chartCanvas.getContext('2d');
     let userScanChart = new Chart(ctx, {
       type: 'bar',
@@ -137,17 +205,17 @@ const chartCanvas = document.getElementById('user-scan-chart');
     });
 
     fetchScanStats();
-  }
+  }   */
 
-  // 📊 Scan Status Doughnut Chart
+  //  Scan Status Doughnut Chart
   const statusChartElem = document.getElementById("status-chart");
   if (statusChartElem) {
     const ctx = statusChartElem.getContext('2d');
     let statusChart;
 
     function updateStatusChart(data) {
-      const labels = ['Delivered', 'Pending', 'Shipped', 'Failed'];
-      const counts = [data.delivered || 0, data.pending || 0, data.shipped || 0, data.failed || 0];
+        const labels = ['Completed', 'Scanned','Failed'];
+        const counts = [data.completed || 0, data.scanned || 0,  data.scanned || 0 ];
 
       if (statusChart) {
         statusChart.data.datasets[0].data = counts;
@@ -185,7 +253,7 @@ const chartCanvas = document.getElementById('user-scan-chart');
     setInterval(fetchStatusData, 60000);
   }
 
-  // 📈 Scan Trend Line Chart
+  // Scan Trend Line Chart
   const scanTrendChartElem = document.getElementById("scan-trend-chart");
   if (scanTrendChartElem) {
     const ctx = scanTrendChartElem.getContext("2d");
@@ -326,17 +394,39 @@ const chartCanvas = document.getElementById('user-scan-chart');
 
 <!-------- date picker ----------------------->
 <script>
-$(function() {
-  $('input[name="datetimes"]').daterangepicker({
-    timePicker: true,
-    startDate: moment().startOf('hour'),
-    endDate: moment().startOf('hour').add(32, 'hour'),
-    locale: {
-      format: 'M/DD hh:mm A'
+$(function () {
+    const $orderDateRange = $('#order-date-range');
+
+    if ($orderDateRange.length) {
+        $orderDateRange.daterangepicker({
+            timePicker: true,
+            autoUpdateInput: false,
+            locale: {
+                format: 'YYYY-MM-DD HH:mm:ss',
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $orderDateRange.on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(
+                picker.startDate.format('YYYY-MM-DD HH:mm:ss') +
+                ' - ' +
+                picker.endDate.format('YYYY-MM-DD HH:mm:ss')
+            );
+        });
+
+        $orderDateRange.on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
+
+        // Pre-fill if there's a value
+        @if(request('datetimes'))
+            $orderDateRange.val("{{ request('datetimes') }}");
+        @endif
     }
-  });
 });
 </script>
+
 
 
     <!--end::Script-->
