@@ -71,8 +71,8 @@ class OrderController extends Controller
 }
 public function syncOrdersFromShippingEasyTest()
 {
-    $apiKey = '7b4d8c5e46f26df2de930b4264d27a13';
-    $apiSecret = '5b2e656e3d23767adadb7fd09fa351a659720fb1baab2828eb67635daaa451dc';
+    $apiKey = 'fdsfd';
+    $apiSecret = 'fdsf';
     $method = "get";
     $path = "/api/orders";
     $params = [
@@ -211,8 +211,8 @@ public function syncOrdersFromShippingEasyTest()
 
 public function checkTrackingNumber($tracking_number)
 {
-    $apiKey = '7b4d8c5e46f26df2de930b4264d27a13';
-    $apiSecret = '5b2e656e3d23767adadb7fd09fa351a659720fb1baab2828eb67635daaa451dc';
+    $apiKey = 'fdsf';
+    $apiSecret = 'fdsf';
     $method = "get";
     $path = "/api/orders";
     $perPage = 100;
